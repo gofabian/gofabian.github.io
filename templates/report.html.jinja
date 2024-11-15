@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Screener - {{ title }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <style>
+        table {
+            margin-top: 30px;
+        }
+
+        td, th {
+            padding: 0 20px 20px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="w3-container w3-green">
+    <h1>{{ title }}</h1>
+</div>
+
+<div class="w3-row-padding">
+    <div class="w3-half">
+        <h2>Long-Signale ⇗ {{ long_signals | length }}</h2>
+        <p>{{ ', '.join(long_signals) }}</p>
+
+        <table>
+            {% for signal in long_signals %}
+                <tr>
+                    <th>{{ signal }}</th>
+                    <td><a href="{{ signal }}.html">Chart</a></td>
+                    <td><a href="https://de.tradingview.com/chart/?symbol={{ signal }}">TradingView</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+    <div class="w3-half">
+        <h2>Short-Signale ⇘ {{ short_signals | length }}</h2>
+        <p>{{ ', '.join(short_signals) }}</p>
+
+        <table>
+            {% for signal in short_signals %}
+                <tr>
+                    <th>{{ signal }}</th>
+                    <td><a href="{{ signal }}.html">Chart</a></td>
+                    <td><a href="https://de.tradingview.com/chart/?symbol={{ signal }}">TradingView</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
