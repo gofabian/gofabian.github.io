@@ -12,4 +12,5 @@ elif now > now.replace(hour=22, minute=0, second=0, microsecond=0):
 else:
     end = now.replace(hour=16, minute=0, second=0, microsecond=0) - timedelta(days=1)
 
+print(f'Generating report for {end}...')
 generate(stocks, end)
