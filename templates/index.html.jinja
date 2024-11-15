@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Screener</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <style>
+        table {
+            margin-top: 30px;
+        }
+
+        td, th {
+            padding: 0 20px 20px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="w3-container w3-green">
+    <h1>Stock Screener</h1>
+</div>
+
+<div class="w3-row-padding">
+    <table>
+        {% for report in reports %}
+            <tr>
+                <td><a href="{{ report.link }}">{{ report.title }}</a></td>
+                <td>{{ report.summary }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>
