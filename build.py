@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from finance import generate
+from screener import generate
 from stocks import stocks
 
 now = datetime.today()
