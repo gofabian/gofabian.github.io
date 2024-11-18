@@ -8,6 +8,7 @@ import requests_cache
 import yfinance as yf
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 from plotly.subplots import make_subplots
+from pytz import timezone
 
 
 def generate_data(stock, df_old_1d, df_15m):
@@ -44,11 +45,16 @@ def generate_data(stock, df_old_1d, df_15m):
 
     index = 0
     count_source = 0
+    tz_new_york = timezone('America/New_York')
+    tz_berlin = timezone('Europe/Berlin')
 
     for timestamp, row in df_15m.iterrows():
         if pd.isna(row['Close']):
             print(f'Skipping nan values of {stock} {timestamp}... {row.to_string()}')
             continue
+
+        # remove timezone, set US timezone, convert to German timezone
+        timestamp = tz_new_york.localize(timestamp.replace(tzinfo=None)).astimezone(tz_berlin)
 
         if count_source == 0:
             data["Datetime"].append(timestamp)
@@ -307,14 +313,16 @@ def download_data(stocks, end):
     return dfs_old_1d, dfs_15m
 
 
-def generate_html(dfs, end):
+def generate_html(dfs):
+    dt_last_candle = dfs[-1]['Datetime'].iloc[-1]
+
     # signal in last value?
     dfs_long = [df for df in dfs if (df.signal_long.iloc[-1] and 'L' in df.signal_long.iloc[-1])]
     dfs_short = [df for df in dfs if (df.signal_short.iloc[-1] and 'S' in df.signal_short.iloc[-1])]
     # filter by current signals
     dfs = dfs_long + dfs_short
 
-    folder = f"docs/{end.strftime('%Y-%m-%dT%H:%M')}"
+    folder = f"docs/{dt_last_candle.strftime('%Y-%m-%dT%H:%M')}"
     print(f'Generating into folder: {folder}...')
     os.makedirs(folder)
 
@@ -327,8 +335,8 @@ def generate_html(dfs, end):
     weekdays = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
 
     raw_data = {
-        'timestamp': end,
-        'title': weekdays[end.weekday()] + ', ' + end.strftime('%d.%m.%Y %H:%M'),
+        'timestamp': dt_last_candle,
+        'title': weekdays[dt_last_candle.weekday()] + ', ' + dt_last_candle.strftime('%d.%m.%Y %H:%M'),
         'long_signals': [df.attrs['stock'] for df in dfs_long],
         'short_signals': [df.attrs['stock'] for df in dfs_short],
     }
@@ -375,4 +383,4 @@ def generate_html(dfs, end):
 def generate(stocks, end):
     dfs_old_1d, dfs_15m = download_data(stocks, end)
     dfs = [generate_data(stock, dfs_old_1d[stock], dfs_15m[stock]) for stock in stocks]
-    generate_html(dfs, end)
+    generate_html(dfs)
