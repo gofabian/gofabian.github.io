@@ -9,10 +9,11 @@
     <style>
         table {
             margin-top: 30px;
+            border-spacing: 0;
         }
 
         td, th {
-            padding: 0 20px 20px 0;
+            padding: 10px;
             text-align: left;
         }
 
@@ -30,7 +31,7 @@
 <div class="w3-row-padding">
     <table>
         {% for report in reports %}
-            <tr>
+            <tr class="date-{{ report.timestamp.split('T')[0] }}">
                 <td><a href="{{ report.link }}">{{ report.title }}</a></td>
                 <td>{{ report.summary }}</td>
             </tr>
@@ -38,6 +39,14 @@
     </table>
 
 </div>
+
+<script>
+    const today = new Date().toISOString().split('T')[0];
+    const trs = document.getElementsByClassName('date-' + today);
+    Array.from(trs).forEach((tr) => {
+        tr.style.backgroundColor = "rgba(76, 175, 80, 0.3)";
+    })
+</script>
 
 </body>
 </html>

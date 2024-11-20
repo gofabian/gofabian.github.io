@@ -126,6 +126,7 @@ def write_index_html():
         with open(f'docs/{timestamp}/data.json', 'r') as f:
             d = json.load(f)
             reports.append({
+                'timestamp': d['timestamp'],
                 'title': f"{d['title']}",
                 'link': f'{timestamp}/index.html',
                 'summary': f"{len(d['long_signals'])}x Long, {len(d['short_signals'])}x Short"
