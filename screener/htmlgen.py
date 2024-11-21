@@ -4,6 +4,7 @@ import os
 import plotly.graph_objects as go
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 from plotly.subplots import make_subplots
+from datetime import datetime
 
 
 def generate_plot(stock, df_195m):
@@ -135,5 +136,8 @@ def write_index_html():
     with open(f'docs/index.html', 'w') as f:
         env = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
         template = env.get_template('index.html.jinja')
-        html = template.render(reports=reports)
+        html = template.render(
+            reports=reports,
+            datetime=datetime
+        )
         f.write(html)
