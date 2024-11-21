@@ -20,3 +20,10 @@ Scans charts of S&P 500 stocks for short and long signals according to PJM train
 `/main.py`: demo runner
 
 `/stocks.py`: list of S&P stocks to be scanned
+
+
+## todos
+
+- Requests an API innerhalb CI reduzieren
+- tickers anhand Marktkapitalisierung reduzieren
+- 
