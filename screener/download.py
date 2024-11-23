@@ -6,36 +6,55 @@ import yfinance as yf
 from pytz import utc, timezone
 
 
-def download_195m(stocks, end):
-    dfs_1d, dfs_15m = _download_195m_raw_data(stocks, end)
+def download_195m(stocks, start, end):
+    dfs_1d, dfs_15m = _download_195m_raw_data(stocks, start, end)
     return [_convert_df_1d_and_df_15m_into_df_195m(df_1d, dfs_15m[i]) for i, df_1d in enumerate(dfs_1d)]
 
 
-def _download_195m_raw_data(stocks, end):
+def _download_195m_raw_data(stocks, start, end):
+    # ...1d data... <now-58d> ...15m data... <now>
+    today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+    threshold_1d_158m = today - timedelta(days=58)
+
+    # fetch 15m data
+    if end > threshold_1d_158m:
+        start_15m = threshold_1d_158m if start < threshold_1d_158m else start.replace(hour=0, minute=0, second=0,
+                                                                                      microsecond=0)
+        end_15m = end
+        dfs_15m = _download_15m(stocks, start_15m, end_15m)
+    else:
+        dfs_15m = []
+
+    # fetch 1d data
+    if start < threshold_1d_158m:
+        start_1d = start.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_1d = threshold_1d_158m if end > threshold_1d_158m else end.replace(hour=0, minute=0, second=0,
+                                                                               microsecond=0)
+        dfs_1d = _download_1d(stocks, start_1d, end_1d)
+    else:
+        dfs_1d = []
+
+    return dfs_1d, dfs_15m
+
+
+def _download_15m(stocks, start, end):
     session = requests_cache.CachedSession('yfinance.cache')
     tz_new_york = timezone('America/New_York')
     tz_berlin = timezone('Europe/Berlin')
 
-    #
-    # fetch previous 60..<start> days historical stock data from Yahoo Finance API
-    #
-
-    today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    start_15m = today - timedelta(days=58)
-    end_15m = end
-    print(f'Requesting 15m intervals, start={start_15m}, end: {end_15m}...')
+    print(f'Requesting 15m intervals, start={start}, end: {end}...')
     dfs_15m = yf.download(
         tickers=stocks,
         interval="15m",
-        start=start_15m,  # api allows max 60 days for '15m'
-        end=today if end_15m < today else end_15m,  # fetch with same end more often to hit the buffer
+        start=start,  # api allows max 60 days in past for '15m'
+        end=end,
         group_by='ticker',
         session=session,
         threads=False  # threads do not work with session
     )
 
     # filter by requested end afterwards
-    dfs_15m = dfs_15m.loc[:(end_15m.replace(tzinfo=utc) - timedelta(seconds=1))]
+    dfs_15m = dfs_15m.loc[:(end.replace(tzinfo=utc) - timedelta(seconds=1))]
 
     # fix timezone
     dfs_15m.index = dfs_15m.index.tz_localize(None).tz_localize(tz_new_york).tz_convert(tz_berlin)
@@ -52,18 +71,19 @@ def _download_195m_raw_data(stocks, end):
     for df_15m in dfs_15m:
         df_15m['Close'] = df_15m['Close'].ffill()
 
-    #
-    # fetch previous 140..60 days historical stock data from Yahoo Finance API
-    #
+    return dfs_15m
 
-    start_1d = start_15m - timedelta(days=140)
-    end_1d = start_15m
-    print(f'Requesting 1d intervals, start={start_1d}, end: {end_1d}...')
+
+def _download_1d(stocks, start, end):
+    session = requests_cache.CachedSession('yfinance.cache')
+    tz_berlin = timezone('Europe/Berlin')
+
+    print(f'Requesting 1d intervals, start={start}, end: {end}...')
     dfs_1d = yf.download(
         tickers=stocks,
         interval="1d",
-        start=start_1d,  # api allows max 730 days for '1d'
-        end=end_1d,
+        start=start,  # api allows max 730 days in past for '1d'
+        end=end,
         group_by='ticker',
         session=session,
         threads=False  # threads do not work with session
@@ -80,7 +100,7 @@ def _download_195m_raw_data(stocks, end):
         dfs_1d_temp.append(df_1d)
     dfs_1d = dfs_1d_temp
 
-    return dfs_1d, dfs_15m
+    return dfs_1d
 
 
 def _convert_df_1d_and_df_15m_into_df_195m(df_1d, df_15m):
