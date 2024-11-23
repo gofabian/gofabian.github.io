@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 import requests_cache
-import yfinance as yf
 from pytz import utc, timezone
+from yfinance import Ticker
 
 
 def download_195m(stocks, start, end):
@@ -38,69 +38,63 @@ def _download_195m_raw_data(stocks, start, end):
 
 
 def _download_15m(stocks, start, end):
+    print(f'Requesting 15m intervals, start={start}, end: {end}...')
+    return _yf_download(
+        stocks=stocks,
+        interval="15m",
+        start=start,  # api allows max 60 days in past for '15m'
+        end=end,
+    )
+
+
+def _download_1d(stocks, start, end):
+    print(f'Requesting 1d intervals, start={start}, end: {end}...')
+    return _yf_download(
+        stocks=stocks,
+        interval="1d",
+        start=start,  # api allows max 730 days in past for '1d'
+        end=end,
+    )
+
+
+def _yf_download(stocks, interval, start, end):
     session = requests_cache.CachedSession('yfinance.cache')
     tz_new_york = timezone('America/New_York')
     tz_berlin = timezone('Europe/Berlin')
 
-    print(f'Requesting 15m intervals, start={start}, end: {end}...')
-    dfs_15m = yf.download(
-        tickers=stocks,
-        interval="15m",
-        start=start,  # api allows max 60 days in past for '15m'
-        end=end,
-        group_by='ticker',
-        session=session,
-        threads=False  # threads do not work with session
-    )
+    finished = -1
 
-    # filter by requested end afterwards
-    dfs_15m = dfs_15m.loc[:(end.replace(tzinfo=utc) - timedelta(seconds=1))]
+    def progress(stock):
+        nonlocal finished
+        finished += 1
+        print(f'\rProgress: {finished}/{len(stocks)} {stock}', end='')
 
-    # fix timezone
-    dfs_15m.index = dfs_15m.index.tz_localize(None).tz_localize(tz_new_york).tz_convert(tz_berlin)
+    progress('')
 
-    # convert multi-level data frame to separate data frames by ticker
-    dfs_15m_temp = []
-    for stock in stocks:
-        df_15m = dfs_15m[stock].copy()
-        df_15m.attrs['stock'] = stock
-        dfs_15m_temp.append(df_15m)
-    dfs_15m = dfs_15m_temp
+    def _yf_history(stock):
+        df = Ticker(stock, session).history(
+            interval=interval,
+            start=start,
+            end=end,
+            raise_errors=True
+        )
+        df.attrs['stock'] = stock
 
-    # Fill na values
-    for df_15m in dfs_15m:
-        df_15m['Close'] = df_15m['Close'].ffill()
+        # filter by requested end afterwards
+        df = df.loc[:(end.replace(tzinfo=utc) - timedelta(seconds=1))]
 
-    return dfs_15m
+        # fix timezone
+        df.index = df.index.tz_localize(None).tz_localize(tz_new_york).tz_convert(tz_berlin)
 
+        # Fill na values
+        df['Close'] = df['Close'].ffill()
 
-def _download_1d(stocks, start, end):
-    session = requests_cache.CachedSession('yfinance.cache')
-    tz_berlin = timezone('Europe/Berlin')
+        progress(stock)
+        return df
 
-    print(f'Requesting 1d intervals, start={start}, end: {end}...')
-    dfs_1d = yf.download(
-        tickers=stocks,
-        interval="1d",
-        start=start,  # api allows max 730 days in past for '1d'
-        end=end,
-        group_by='ticker',
-        session=session,
-        threads=False  # threads do not work with session
-    )
-
-    # fix timezone
-    dfs_1d.index = dfs_1d.index.tz_localize(None).tz_localize(tz_berlin)
-
-    # convert multi-level data frame to separate data frames by ticker
-    dfs_1d_temp = []
-    for stock in stocks:
-        df_1d = dfs_1d[stock].copy()
-        df_1d.attrs['stock'] = stock
-        dfs_1d_temp.append(df_1d)
-    dfs_1d = dfs_1d_temp
-
-    return dfs_1d
+    dfs = [_yf_history(stock) for stock in stocks]
+    print()
+    return dfs
 
 
 def _convert_df_1d_and_df_15m_into_df_195m(df_1d, df_15m):
