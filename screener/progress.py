@@ -13,4 +13,4 @@ class Progress:
         return lbda()
 
     def animate(self):
-        print(f'\rProgress "{self.name}": {self.elapsed + 1}/{len(self.stocks)} {self.stocks[self.elapsed]}', end='')
+        print(f'\rProgress "{self.name}": {self.elapsed + 1}/{len(self.stocks)} {self.stocks[self.elapsed]} ', end='')
