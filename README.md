@@ -24,6 +24,4 @@ Scans charts of S&P 500 stocks for short and long signals according to PJM train
 
 ## todos
 
-- Requests an API innerhalb CI reduzieren
-- tickers anhand Marktkapitalisierung reduzieren
 - 
