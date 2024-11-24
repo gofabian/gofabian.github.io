@@ -77,6 +77,9 @@ def _yf_history(stock, interval, start, end):
     df.index = df.index.tz_localize(None).tz_localize(tz_new_york).tz_convert(tz_berlin)
 
     # Fill na values
+    if df['Close'].isnull().any():
+        print(f'Found null values in stock {stock}')
+    df['CloseBkp'] = df['Close'].values
     df['Close'] = df['Close'].ffill()
 
     # Drop volume column with na values
@@ -118,6 +121,7 @@ def convert_15m_to_195m(df_15m):
         "High": [],
         "Low": [],
         "Close": [],
+        "CloseBkp": []
     }
 
     index = 0
@@ -133,13 +137,15 @@ def convert_15m_to_195m(df_15m):
             data["Open"].append(row["Open"])
             data["High"].append(-1)
             data["Low"].append(99999999)
-            data["Close"].append(-1)
+            data["Close"].append(None)
+            data["CloseBkp"].append(None)
 
         if row["High"] > data["High"][index]:
             data["High"][index] = row["High"]
         if row["Low"] < data["Low"][index]:
             data["Low"][index] = row["Low"]
         data["Close"][index] = row["Close"]
+        data["CloseBkp"][index] = row["CloseBkp"]
 
         count_source += 1
         if count_source >= (195 / 15):
@@ -157,5 +163,7 @@ def convert_1d_to_195m(df_1d):
     df_195m.reset_index(inplace=True, drop=True)
     df_195m.index *= 2
     df_195m = df_195m.reindex(range(df_195m.index.min(), df_195m.index.max() + 2))
-    df_195m.interpolate(inplace=True)
+    df_195m['Datetime'] = df_195m['Datetime'].interpolate()
+    df_195m['Close'] = df_195m['Close'].interpolate()
+    df_195m.loc[df_195m.index % 2 == 1, 'CloseBkp'] = df_195m['CloseBkp'].interpolate()[1::2]
     return df_195m
