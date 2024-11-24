@@ -5,99 +5,105 @@ import requests_cache
 from pytz import utc, timezone
 from yfinance import Ticker
 
+session = requests_cache.CachedSession('yfinance.cache')
+tz_new_york = timezone('America/New_York')
+tz_berlin = timezone('Europe/Berlin')
 
-def download_195m(stocks, start, end):
-    dfs_1d, dfs_15m = _download_195m_raw_data(stocks, start, end)
-    return [_convert_df_1d_and_df_15m_into_df_195m(df_1d, dfs_15m[i]) for i, df_1d in enumerate(dfs_1d)]
+
+def download_195m(stock, start, end):
+    df_1d, df_15m = _download_195m_raw_data(stock, start, end)
+    return _convert_df_1d_and_df_15m_into_df_195m(df_1d, df_15m)
 
 
-def _download_195m_raw_data(stocks, start, end):
+def _download_195m_raw_data(stock, start, end):
     # ...1d data... <now-58d> ...15m data... <now>
     today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     threshold_1d_158m = today - timedelta(days=58)
 
     # fetch 15m data
     if end > threshold_1d_158m:
-        start_15m = threshold_1d_158m if start < threshold_1d_158m else start.replace(hour=0, minute=0, second=0,
-                                                                                      microsecond=0)
+        start_15m = threshold_1d_158m if start < threshold_1d_158m else start
         end_15m = end
-        dfs_15m = _download_15m(stocks, start_15m, end_15m)
+        df_15m = _yf_history(
+            stock=stock,
+            interval="15m",
+            start=start_15m,  # api allows max 60 days in past for '15m'
+            end=end_15m,
+        )
     else:
-        dfs_15m = []
+        df_15m = None
 
     # fetch 1d data
     if start < threshold_1d_158m:
         start_1d = start.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_1d = threshold_1d_158m if end > threshold_1d_158m else end.replace(hour=0, minute=0, second=0,
+        end_1d = threshold_1d_158m if end > threshold_1d_158m else end.replace(hour=23, minute=0, second=0,
                                                                                microsecond=0)
-        dfs_1d = _download_1d(stocks, start_1d, end_1d)
+        df_1d = _yf_history(
+            stock=stock,
+            interval="1d",
+            start=start_1d,  # api allows max 730 days in past for '1d'
+            end=end_1d,
+        )
     else:
-        dfs_1d = []
+        df_1d = None
 
-    return dfs_1d, dfs_15m
-
-
-def _download_15m(stocks, start, end):
-    print(f'Requesting 15m intervals, start={start}, end: {end}...')
-    return _yf_download(
-        stocks=stocks,
-        interval="15m",
-        start=start,  # api allows max 60 days in past for '15m'
-        end=end,
-    )
+    return df_1d, df_15m
 
 
-def _download_1d(stocks, start, end):
-    print(f'Requesting 1d intervals, start={start}, end: {end}...')
-    return _yf_download(
-        stocks=stocks,
-        interval="1d",
-        start=start,  # api allows max 730 days in past for '1d'
-        end=end,
-    )
+def _yf_history(stock, interval, start, end):
+    start = _harmonize_datetime(start)
+    end = _harmonize_datetime(end)
 
-
-def _yf_download(stocks, interval, start, end):
-    session = requests_cache.CachedSession('yfinance.cache')
-    tz_new_york = timezone('America/New_York')
-    tz_berlin = timezone('Europe/Berlin')
-
-    finished = -1
-
-    def progress(stock):
-        nonlocal finished
-        finished += 1
-        print(f'\rProgress: {finished}/{len(stocks)} {stock}', end='')
-
-    progress('')
-
-    def _yf_history(stock):
+    if start == end:
+        df = pd.DataFrame()
+    else:
         df = Ticker(stock, session).history(
             interval=interval,
             start=start,
             end=end,
+            actions=False,
             raise_errors=True
         )
-        df.attrs['stock'] = stock
 
-        # filter by requested end afterwards
-        df = df.loc[:(end.replace(tzinfo=utc) - timedelta(seconds=1))]
+    df.attrs['stock'] = stock
 
-        # fix timezone
-        df.index = df.index.tz_localize(None).tz_localize(tz_new_york).tz_convert(tz_berlin)
-
-        # Fill na values
-        df['Close'] = df['Close'].ffill()
-
-        progress(stock)
+    if df.empty:
         return df
 
-    dfs = [_yf_history(stock) for stock in stocks]
-    print()
-    return dfs
+    # filter by requested end afterwards
+    df = df.loc[:(end.replace(tzinfo=utc) - timedelta(seconds=1))]
+
+    # fix timezone
+    df.index = df.index.tz_localize(None).tz_localize(tz_new_york).tz_convert(tz_berlin)
+
+    # Fill na values
+    df['Close'] = df['Close'].ffill()
+
+    # Drop volume column with na values
+    df = df.drop(columns=['Volume'])
+
+    return df
+
+
+def _harmonize_datetime(dt):
+    if dt.hour < 9:
+        # no prices expected before 9:00
+        dt = dt.replace(hour=9, minute=0, second=0, microsecond=0)
+    if dt.hour >= 16:
+        # no prices expected after 16:00
+        dt = dt.replace(hour=9, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    if dt.weekday() > 4:
+        # no prices expected at Saturday and Sunday
+        dt = dt + timedelta(days=7 - dt.weekday())
+    return dt
 
 
 def _convert_df_1d_and_df_15m_into_df_195m(df_1d, df_15m):
+    if df_1d is None:
+        return convert_15m_to_195m(df_15m)
+    if df_15m is None:
+        return convert_1d_to_195m(df_1d)
+
     df_195m_from_1d = convert_1d_to_195m(df_1d)
     df_195m_from_15m = convert_15m_to_195m(df_15m)
     df_195m = pd.concat([df_195m_from_1d, df_195m_from_15m])
