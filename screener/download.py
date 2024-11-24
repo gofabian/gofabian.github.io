@@ -156,6 +156,6 @@ def convert_1d_to_195m(df_1d):
     df_195m['Datetime'] = df_195m.index
     df_195m.reset_index(inplace=True, drop=True)
     df_195m.index *= 2
-    df_195m = df_195m.reindex(range(df_195m.index.min(), df_195m.index.max()))
+    df_195m = df_195m.reindex(range(df_195m.index.min(), df_195m.index.max() + 2))
     df_195m.interpolate(inplace=True)
     return df_195m
