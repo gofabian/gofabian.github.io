@@ -18,6 +18,9 @@ def download_195m(stock, start, end):
     if df_cache is None:
         df = download.download_195m(stock, start, end)
     else:
+        # filter
+        df_cache = df_cache[
+            (df_cache['Datetime'] >= tz_berlin.localize(start)) & (df_cache['Datetime'] < tz_berlin.localize(end))]
         start_cache = df_cache['Datetime'].iloc[0].astimezone(tz_new_york).replace(tzinfo=None)
         end_cache = df_cache['Datetime'].iloc[-1].astimezone(tz_new_york).replace(tzinfo=None) + timedelta(minutes=195)
 
