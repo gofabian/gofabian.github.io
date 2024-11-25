@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 import requests_cache
-from pytz import utc, timezone
+from pytz import timezone
 from yfinance import Ticker
 
 session = requests_cache.CachedSession('yfinance.cache')
@@ -71,7 +71,7 @@ def _yf_history(stock, interval, start, end):
         return df
 
     # filter by requested end afterwards
-    df = df.loc[:(end.replace(tzinfo=utc) - timedelta(seconds=1))]
+    df = df.loc[:(tz_new_york.localize(end) - timedelta(seconds=1))]
 
     # fix timezone
     df.index = df.index.tz_localize(None).tz_localize(tz_new_york).tz_convert(tz_berlin)

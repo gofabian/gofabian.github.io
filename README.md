@@ -24,4 +24,7 @@ Scans charts of S&P 500 stocks for short and long signals according to PJM train
 
 ## todos
 
-- 
+- filter cache by requested start/end
+- check for na values
+- write raw.json for each report
+- timezones!?!?!
