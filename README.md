@@ -28,3 +28,5 @@ Scans charts of S&P 500 stocks for short and long signals according to PJM train
 - check for na values
 - write raw.json for each report
 - timezones!?!?!
+- holidays
+- bis jetzt nachgenerieren, nicht nächstes vermutetes
