@@ -1,17 +1,37 @@
-from datetime import datetime
+from ib_async import *
 
-from pytz import timezone
+from log import log
+from logic import export_charts
+from schedule import get_next_timestamps, write_timestamp
 
-from screener import generate
-from stocks import stocks
+# s&p500 MK>70B
+symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK B", "ORCL", "JPM", "WMT",
+           "LLY", "V", "NFLX", "MA", "XOM", "JNJ", "PLTR", "COST", "ABBV", "HD", "BAC", "AMD", "PG", "UNH", "GE", "CVX",
+           "KO", "CSCO", "IBM", "TMUS", "WFC", "PM", "MS", "GS", "CRM", "CAT", "ABT", "AXP", "MU", "MCD", "LIN", "MRK",
+           "RTX", "PEP", "APP", "DIS", "TMO", "UBER", "BX", "NOW", "BLK", "ANET", "T", "INTU", "C", "GEV", "AMAT",
+           "QCOM", "INTC", "LRCX", "NEE", "BKNG", "SCHW", "VZ", "BA", "ACN", "TXN", "AMGN", "TJX", "ISRG", "APH", "DHR",
+           "GILD", "SPGI", "ETN", "PANW", "ADBE", "BSX", "PFE", "SYK", "PGR", "KLAC", "UNP", "COF", "LOW", "HON",
+           "CRWD", "HOOD", "MDT", "IBKR", "CEG", "DE", "LMT", "DASH", "ADI", "ADP", "CB", "COP", "MO", "CMCSA", "SO",
+           "KKR", "VRTX", "DELL", "MMC", "NKE", "CVS", "NEM", "DUK", "CME", "HCA", "MCK", "TT", "PH", "COIN", "SBUX",
+           "ICE", "CDNS", "GD", "BMY", "NOC", "WM", "ORLY", "MCO", "SNPS", "RCL", "SHW", "MMM", "MDLZ", "ELV", "CI",
+           "ECL", "HWM", "WMB", "AJG", "AON", "MSI", "CTAS", "BK", "ABNB", "PNC", "GLW", "TDG", "EMR", "USB", "MAR",
+           "ITW", "VST", "NSC", "UPS", "APO"]
+symbols = ["HD"]
 
-# pjm
-# end = datetime(year=2024, month=11, day=11, hour=12, minute=00, second=0, microsecond=0)
-# end = datetime(year=2024, month=11, day=11, hour=15, minute=00, second=0, microsecond=0)
+log("Connecting to broker...")
+ib = IB()
+ib.connect('127.0.0.1', 4002, clientId=1)
 
-# trading view
-# end = datetime(year=2024, month=11, day=14, hour=12, minute=45, second=0, microsecond=0)
-# end = datetime(year=2024, month=11, day=12, hour=16, minute=00, second=0, microsecond=0)
+timestamps = get_next_timestamps()
+for timestamp in timestamps:
+    # todo log
+    print(timestamp.isoformat())
 
-end = datetime.now(tz=timezone("America/New_York")).replace(tzinfo=None)
-generate(stocks, end)
+for timestamp in timestamps:
+    export_charts(ib, symbols, timestamp)
+
+if len(timestamps) > 0:
+    write_timestamp(timestamps[-1])
+
+log("Disconnecting...")
+ib.disconnect()
