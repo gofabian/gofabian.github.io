@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Screener</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <style>
+        h1 a {
+            text-decoration: none;
+        }
+
+        table {
+            margin-top: 30px;
+            border-spacing: 0;
+        }
+
+        td, th {
+            padding: 10px;
+            text-align: left;
+        }
+
+        td a:focus {
+            color: red;
+        }
+
+        .bg-gray {
+            background-color: rgba(245, 245, 245, 1);
+        }
+
+        .bg-green {
+            background-color: rgba(76, 175, 80, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="w3-container w3-green">
+    <h1><a href="#" onclick="window.location.reload();">Stock Screener</a></h1>
+</div>
+
+<div class="w3-row-padding">
+    <table>
+        <tr class="date-2025-10-17 bg-gray">
+                <td><a href="2025-10-17T16:00/index.html">Freitag, 17.10.2025 16:00</a></td>
+                <td>1x Long, 0x Short</td>
+            </tr>
+        
+    </table>
+
+</div>
+
+<script>
+    const today = new Date().toISOString().split('T')[0];
+    const trs = document.getElementsByClassName('date-' + today);
+    Array.from(trs).forEach((tr) => {
+        tr.classList.add('bg-green');
+    })
+</script>
+
+</body>
+</html>
