@@ -45,8 +45,8 @@
         {% for report in reports -%}
             {% set day = datetime.fromisoformat(report.timestamp).day + datetime.fromisoformat(reports[0].timestamp).day -%}
             <tr class="date-{{ report.timestamp.split('T')[0] }}{{ ' bg-gray' if (day % 2) == 0 else '' }}">
-                <td><a href="{{ report.link }}">{{ report.title }}</a></td>
-                <td>{{ report.summary }}</td>
+                <td><a href="{{ report.folder }}/index.html">{{ report.title }}</a></td>
+                <td>{{ report['symbols_long'] | length }}x Long, {{report['symbols_short'] | length}}x Short</td>
             </tr>
         {% endfor %}
     </table>

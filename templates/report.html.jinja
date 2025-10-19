@@ -34,15 +34,15 @@
 
 <div class="w3-row-padding">
     <div class="w3-half">
-        <h2>Long-Signale ⇗ {{ long_signals | length }}</h2>
-        <p>{{ ', '.join(long_signals) }}</p>
+        <h2>Long-Signale ⇗ {{ symbols_long | length }}</h2>
+        <p>{{ ', '.join(symbols_long) }}</p>
 
         <table>
-            {% for signal in long_signals %}
+            {% for symbol in symbols_long %}
                 <tr>
-                    <th>{{ signal }}</th>
-                    <td><a href="{{ signal }}.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol={{ signal }}">TradingView</a></td>
+                    <th>{{ symbol }}</th>
+                    <td><a href="{{ symbol }}/chart.html">Chart</a></td>
+                    <td><a href="https://de.tradingview.com/chart/?symbol={{ symbol }}">TradingView</a></td>
                 </tr>
             {% endfor %}
         </table>
@@ -50,15 +50,15 @@
     </div>
 
     <div class="w3-half">
-        <h2>Short-Signale ⇘ {{ short_signals | length }}</h2>
-        <p>{{ ', '.join(short_signals) }}</p>
+        <h2>Short-Signale ⇘ {{ symbols_short | length }}</h2>
+        <p>{{ ', '.join(symbols_short) }}</p>
 
         <table>
-            {% for signal in short_signals %}
+            {% for symbol in symbols_short %}
                 <tr>
-                    <th>{{ signal }}</th>
-                    <td><a href="{{ signal }}.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol={{ signal }}">TradingView</a></td>
+                    <th>{{ symbol }}</th>
+                    <td><a href="{{ symbol }}/chart.html">Chart</a></td>
+                    <td><a href="https://de.tradingview.com/chart/?symbol={{ symbol }}">TradingView</a></td>
                 </tr>
             {% endfor %}
         </table>

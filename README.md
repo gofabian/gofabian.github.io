@@ -2,31 +2,39 @@
 
 Scans charts of S&P 500 stocks for short and long signals according to PJM training.
 
-## Generated website
+## Market hours
 
-<img src="ui1.jpeg" width=300> <img src="ui2.jpeg" width=300> <img src="ui3.jpeg" width=300>
+9:30 - 16:00 -04:00 USA
+15:30 - 22:00 +02:00 Germany summer
+14:30 - 21:00 +01:00 Germany winter
 
+## Development
 
-## Structure
+Look at Github actions workflow to find out how to start IB gateway and the Python script locally.
 
-`/docs/`: generated website
+Either run IB gateway application directly or the docker container (see ./ibgateway.sh).
 
-`/templates/`: html templates
+## IB Gateway
 
-`/build.py`: build script
-
-`/finance.py`: generation logic
-
-`/main.py`: demo runner
-
-`/stocks.py`: list of S&P stocks to be scanned
-
+https://github.com/gnzsnz/ib-gateway-docker
 
 ## todos
 
-- filter cache by requested start/end
-- check for na values
-- write raw.json for each report
-- timezones!?!?!
-- holidays
-- bis jetzt nachgenerieren, nicht nächstes vermutetes
+pro symbol
+
+- generate(from, until)
+- duration=100D + days(until-from)/7*5
+- req_historical_data (end_datetime=until, duration="200 D" + days(until-from)/7*5)
+- Indikatoren generieren
+- Signale für df.tail(-180)
+- L/S suchen in from..until
+- an entsprechendem Ort chart.html/metadata.json/data.json exportieren
+- report.html neu generieren
+- index.html neu generieren
+- in git hochladen
+
+Progress auf Webseite anzeigen
+
+- grün: Generierung abgeschlossen
+- gelb: Generierung läuft
+- rot: Fehler in Generierung
