@@ -34,10 +34,10 @@ jobs:
           - 127.0.0.1:4002:4004
         options: >-
           --user root
-          --health-cmd "nc -z localhost 4002 || exit 1"
+          --health-cmd "bash -c 'echo > /dev/tcp/127.0.0.1/4004' || exit 1"
           --health-interval 5s
-          --health-timeout 20s
-          --health-retries 100
+          --health-timeout 2s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
