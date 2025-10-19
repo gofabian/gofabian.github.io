@@ -33,6 +33,7 @@ jobs:
         ports:
           - 127.0.0.1:4002:4004
         options: >-
+          --user root
           --health-cmd "nc -z localhost 4004 || exit 1"
           --health-interval 5s
           --health-timeout 20s
