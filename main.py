@@ -16,6 +16,7 @@ symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK 
            "ICE", "CDNS", "GD", "BMY", "NOC", "WM", "ORLY", "MCO", "SNPS", "RCL", "SHW", "MMM", "MDLZ", "ELV", "CI",
            "ECL", "HWM", "WMB", "AJG", "AON", "MSI", "CTAS", "BK", "ABNB", "PNC", "GLW", "TDG", "EMR", "USB", "MAR",
            "ITW", "VST", "NSC", "UPS", "APO"]
+# symbols = ["HD"]
 
 log("Connecting to broker...")
 ib = IB()
