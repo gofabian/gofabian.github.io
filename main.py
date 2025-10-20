@@ -1,6 +1,3 @@
-from ib_async import *
-
-from log import log
 from logic import export_charts
 from schedule import get_next_timestamps, write_timestamp
 
@@ -18,20 +15,13 @@ symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK 
            "ITW", "VST", "NSC", "UPS", "APO"]
 # symbols = ["HD"]
 
-log("Connecting to broker...")
-ib = IB()
-ib.connect('127.0.0.1', 4002, clientId=1)
-
 timestamps = get_next_timestamps()
 for timestamp in timestamps:
     # todo log
     print(timestamp.isoformat())
 
 for timestamp in timestamps:
-    export_charts(ib, symbols, timestamp)
+    export_charts(symbols, timestamp)
 
 if len(timestamps) > 0:
     write_timestamp(timestamps[-1])
-
-log("Disconnecting...")
-ib.disconnect()
