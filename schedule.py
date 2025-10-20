@@ -18,21 +18,21 @@ def get_next_timestamps() -> list[datetime]:
 
 
 def get_next_timestamp(dt: datetime) -> datetime:
-    if (dt.hour < 9) or (dt.hour == 9 and dt.minute < 30):
-        # <09:30 -> 09:30
-        dt = dt.replace(hour=9, minute=30, second=0, microsecond=0)
+    if (dt.hour < 12) or (dt.hour == 12 and dt.minute < 45):
+        # <12:45 -> 12:45
+        dt = dt.replace(hour=12, minute=45, second=0, microsecond=0)
     elif dt.hour < 16:
         # <16:00 -> 16:00
         dt = dt.replace(hour=16, minute=0, second=0, microsecond=0)
     else:
-        # >=16:00 -> nächster Tag 09:30
+        # >=16:00 -> nächster Tag 12:45
         dt += timedelta(days=1)
-        dt = dt.replace(hour=9, minute=30, second=0, microsecond=0)
+        dt = dt.replace(hour=12, minute=45, second=0, microsecond=0)
 
     if dt.weekday() > 4:
-        # Samstag/Sonntag -> Montag 09:30
+        # Samstag/Sonntag -> Montag 12:45
         dt += timedelta(days=7 - dt.weekday())
-        dt = dt.replace(hour=9, minute=30, second=0, microsecond=0)
+        dt = dt.replace(hour=12, minute=45, second=0, microsecond=0)
 
     return dt
 
@@ -41,11 +41,11 @@ def get_previous_timestamp(dt: datetime) -> datetime:
     if dt.hour > 16:
         # >16:00 -> 16:00
         dt = dt.replace(hour=16, minute=0, second=0, microsecond=0)
-    elif (dt.hour > 9) or (dt.hour == 9 and dt.minute > 30):
-        # >09:30 -> 09:30
-        dt = dt.replace(hour=9, minute=30, second=0, microsecond=0)
+    elif (dt.hour > 12) or (dt.hour == 12 and dt.minute > 45):
+        # >12:45 -> 12:45
+        dt = dt.replace(hour=12, minute=45, second=0, microsecond=0)
     else:
-        # <=09:30 -> vorheriger Tag 16:00
+        # <=12:45 -> vorheriger Tag 16:00
         dt -= timedelta(days=1)
         dt = dt.replace(hour=16, minute=0, second=0, microsecond=0)
 
