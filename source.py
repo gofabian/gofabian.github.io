@@ -5,12 +5,13 @@ from ib_async import *
 
 
 def req_historical_data(
-        ib: IB,
         symbol: str,
         end_datetime: datetime = '',
         duration_str: str = '30 D'
 ) -> pd.DataFrame:
     # access interactive broker api
+    ib = IB()
+    ib.connect('127.0.0.1', 4002, clientId=1)
     bars = ib.reqHistoricalData(
         Stock(symbol, 'SMART', 'USD'),
         endDateTime=end_datetime,
@@ -19,6 +20,7 @@ def req_historical_data(
         whatToShow='TRADES',
         useRTH=True
     )
+    ib.disconnect()
 
     # switch to pandas world
     df_15 = util.df(bars)

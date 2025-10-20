@@ -4,7 +4,6 @@ import time
 from datetime import datetime
 from typing import Tuple
 
-from ib_async import IB
 from pandas import DataFrame
 
 import indication
@@ -16,7 +15,7 @@ from log import log
 WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
 
 
-def export_charts(ib: IB, symbols: list[str], end_datetime: datetime):
+def export_charts(symbols: list[str], end_datetime: datetime):
     folder = f"docs/{end_datetime.strftime('%Y-%m-%dT%H:%M')}"
     log(f"Target: {folder}")
     os.makedirs(folder, exist_ok=True)
@@ -27,7 +26,7 @@ def export_charts(ib: IB, symbols: list[str], end_datetime: datetime):
 
     for i, symbol in enumerate(symbols):
         log(f"=== {symbol} {i + 1}/{len(symbols)} ===")
-        metadata_symbol, df = analyze_symbol(ib, symbol, end_datetime)
+        metadata_symbol, df = analyze_symbol(symbol, end_datetime)
 
         if "L" in metadata_symbol["signals_long"]:
             export_chart(metadata_symbol, df, f"{folder}/{symbol}")
@@ -63,9 +62,9 @@ def export_charts(ib: IB, symbols: list[str], end_datetime: datetime):
     write_index_html()
 
 
-def analyze_symbol(ib: IB, symbol: str, end_datetime: datetime) -> Tuple[dict, DataFrame]:
+def analyze_symbol(symbol: str, end_datetime: datetime) -> Tuple[dict, DataFrame]:
     log(f"Requesting historical data for {symbol}...")
-    df = source.req_historical_data(ib, symbol=symbol, end_datetime=end_datetime, duration_str='100 D')
+    df = source.req_historical_data(symbol=symbol, end_datetime=end_datetime, duration_str='100 D')
 
     log(f"Analyzing data for {symbol}...")
     indication.analyze(df)
