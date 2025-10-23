@@ -16,7 +16,7 @@ WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'
 
 
 def export_charts(symbols: list[str], end_datetime: datetime):
-    folder = f"docs/{end_datetime.strftime('%Y-%m-%dT%H:%M')}"
+    folder = f"docs/{end_datetime.strftime('%Y-%m-%dT%H%M')}"
     log(f"Target: {folder}")
     os.makedirs(folder, exist_ok=True)
 
