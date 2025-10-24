@@ -1,5 +1,8 @@
+from datetime import datetime, timedelta
+from time import sleep
+
 from logic import export_charts
-from schedule import get_next_timestamps, write_timestamp
+from schedule import get_due_timestamps, write_timestamp, get_next_timestamp, TZ
 
 # s&p500 MK>70B
 symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK B", "ORCL", "JPM", "WMT",
@@ -15,7 +18,8 @@ symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK 
            "ITW", "VST", "NSC", "UPS", "APO"]
 # symbols = ["HD"]
 
-timestamps = get_next_timestamps()
+# process timestamps in the past
+timestamps = get_due_timestamps()
 for timestamp in timestamps:
     # todo log
     print(timestamp.isoformat())
@@ -25,3 +29,18 @@ for timestamp in timestamps:
 
 if len(timestamps) > 0:
     write_timestamp(timestamps[-1])
+
+# process "near" next timestamp
+now = datetime.now(tz=TZ)
+next_timestamp = get_next_timestamp(now)
+if now + timedelta(minutes=15) > next_timestamp:
+    while True:
+        now = datetime.now(tz=TZ)
+        print(f'Waiting... now={now} until={next_timestamp.time()}')
+        if now >= next_timestamp:
+            break
+        sleep(60)
+
+    print(f'Report due now -> generate')
+    export_charts(symbols, next_timestamp)
+    write_timestamp(next_timestamp)

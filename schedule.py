@@ -12,7 +12,7 @@ VALID_TIMES = sorted([
 ])
 
 
-def get_next_timestamps() -> list[datetime]:
+def get_due_timestamps() -> list[datetime]:
     now = datetime.now(tz=TZ)
     previous = read_timestamp() or get_previous_timestamp(get_previous_timestamp(now))
 
