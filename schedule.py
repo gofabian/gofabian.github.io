@@ -1,6 +1,13 @@
 import json
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, time
+
+VALID_TIMES = sorted([
+    time(hour=12, minute=0),  # 18:00
+    time(hour=12, minute=45),  # 18:45
+    time(hour=15, minute=0),  # 21:00
+    time(hour=16, minute=0),  # 22:00
+])
 
 
 def get_next_timestamps() -> list[datetime]:
@@ -18,43 +25,49 @@ def get_next_timestamps() -> list[datetime]:
 
 
 def get_next_timestamp(dt: datetime) -> datetime:
-    if (dt.hour < 12) or (dt.hour == 12 and dt.minute < 45):
-        # <12:45 -> 12:45
-        dt = dt.replace(hour=12, minute=45, second=0, microsecond=0)
-    elif dt.hour < 16:
-        # <16:00 -> 16:00
-        dt = dt.replace(hour=16, minute=0, second=0, microsecond=0)
-    else:
-        # >=16:00 -> nächster Tag 12:45
-        dt += timedelta(days=1)
-        dt = dt.replace(hour=12, minute=45, second=0, microsecond=0)
+    next_timestamp: datetime | None = None
 
-    if dt.weekday() > 4:
+    for valid_time in VALID_TIMES:
+        if dt.time() < valid_time:
+            # e.g. <12:45 -> 12:45
+            # e.g. <16:00 -> 16:00
+            next_timestamp = datetime.combine(dt.date(), valid_time)
+            break
+
+    if next_timestamp is None:
+        # e.g. >=16:00 -> nächster Tag 12:45
+        next_timestamp = dt + timedelta(days=1)
+        next_timestamp = datetime.combine(next_timestamp, VALID_TIMES[0])
+
+    if next_timestamp.weekday() > 4:
         # Samstag/Sonntag -> Montag 12:45
-        dt += timedelta(days=7 - dt.weekday())
-        dt = dt.replace(hour=12, minute=45, second=0, microsecond=0)
+        next_timestamp += timedelta(days=7 - dt.weekday())
+        next_timestamp = datetime.combine(next_timestamp.date(), VALID_TIMES[0])
 
-    return dt
+    return next_timestamp
 
 
 def get_previous_timestamp(dt: datetime) -> datetime:
-    if dt.hour > 16:
-        # >16:00 -> 16:00
-        dt = dt.replace(hour=16, minute=0, second=0, microsecond=0)
-    elif (dt.hour > 12) or (dt.hour == 12 and dt.minute > 45):
-        # >12:45 -> 12:45
-        dt = dt.replace(hour=12, minute=45, second=0, microsecond=0)
-    else:
-        # <=12:45 -> vorheriger Tag 16:00
-        dt -= timedelta(days=1)
-        dt = dt.replace(hour=16, minute=0, second=0, microsecond=0)
+    previous_timestamp: datetime | None = None
 
-    if dt.weekday() > 4:
+    for valid_time in sorted(VALID_TIMES, reverse=True):
+        if dt.time() > valid_time:
+            # e.g. >16:00 -> 16:00
+            # e.g. >12:45 -> 12:45
+            previous_timestamp = datetime.combine(dt.date(), valid_time)
+            break
+
+    if previous_timestamp is None:
+        # g.g. <=12:45 -> vorheriger Tag 16:00
+        previous_timestamp = dt - timedelta(days=1)
+        previous_timestamp = datetime.combine(previous_timestamp.date(), VALID_TIMES[-1])
+
+    if previous_timestamp.weekday() > 4:
         # Samstag/Sonntag -> Freitag 16:00
-        dt -= timedelta(days=dt.weekday() - 4)
-        dt = dt.replace(hour=16, minute=0, second=0, microsecond=0)
+        previous_timestamp -= timedelta(days=dt.weekday() - 4)
+        previous_timestamp = datetime.combine(previous_timestamp.date(), VALID_TIMES[-1])
 
-    return dt
+    return previous_timestamp
 
 
 def read_timestamp() -> datetime | None:
