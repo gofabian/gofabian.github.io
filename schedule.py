@@ -2,6 +2,8 @@ import json
 import os
 from datetime import datetime, timedelta, timezone, time
 
+TZ = timezone(timedelta(hours=-4))
+
 VALID_TIMES = sorted([
     time(hour=12, minute=0),  # 18:00
     time(hour=12, minute=45),  # 18:45
@@ -11,7 +13,7 @@ VALID_TIMES = sorted([
 
 
 def get_next_timestamps() -> list[datetime]:
-    now = datetime.now(tz=timezone(timedelta(hours=-4)))
+    now = datetime.now(tz=TZ)
     previous = read_timestamp() or get_previous_timestamp(get_previous_timestamp(now))
 
     timestamps = []
@@ -31,18 +33,18 @@ def get_next_timestamp(dt: datetime) -> datetime:
         if dt.time() < valid_time:
             # e.g. <12:45 -> 12:45
             # e.g. <16:00 -> 16:00
-            next_timestamp = datetime.combine(dt.date(), valid_time)
+            next_timestamp = datetime.combine(dt.date(), valid_time, tzinfo=TZ)
             break
 
     if next_timestamp is None:
         # e.g. >=16:00 -> nächster Tag 12:45
         next_timestamp = dt + timedelta(days=1)
-        next_timestamp = datetime.combine(next_timestamp, VALID_TIMES[0])
+        next_timestamp = datetime.combine(next_timestamp, VALID_TIMES[0], tzinfo=TZ)
 
     if next_timestamp.weekday() > 4:
         # Samstag/Sonntag -> Montag 12:45
         next_timestamp += timedelta(days=7 - dt.weekday())
-        next_timestamp = datetime.combine(next_timestamp.date(), VALID_TIMES[0])
+        next_timestamp = datetime.combine(next_timestamp.date(), VALID_TIMES[0], tzinfo=TZ)
 
     return next_timestamp
 
@@ -54,18 +56,18 @@ def get_previous_timestamp(dt: datetime) -> datetime:
         if dt.time() > valid_time:
             # e.g. >16:00 -> 16:00
             # e.g. >12:45 -> 12:45
-            previous_timestamp = datetime.combine(dt.date(), valid_time)
+            previous_timestamp = datetime.combine(dt.date(), valid_time, tzinfo=TZ)
             break
 
     if previous_timestamp is None:
         # g.g. <=12:45 -> vorheriger Tag 16:00
         previous_timestamp = dt - timedelta(days=1)
-        previous_timestamp = datetime.combine(previous_timestamp.date(), VALID_TIMES[-1])
+        previous_timestamp = datetime.combine(previous_timestamp.date(), VALID_TIMES[-1], tzinfo=TZ)
 
     if previous_timestamp.weekday() > 4:
         # Samstag/Sonntag -> Freitag 16:00
         previous_timestamp -= timedelta(days=dt.weekday() - 4)
-        previous_timestamp = datetime.combine(previous_timestamp.date(), VALID_TIMES[-1])
+        previous_timestamp = datetime.combine(previous_timestamp.date(), VALID_TIMES[-1], tzinfo=TZ)
 
     return previous_timestamp
 
