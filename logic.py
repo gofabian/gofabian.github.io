@@ -2,9 +2,8 @@ import json
 import os
 import time
 from datetime import datetime
-from typing import Tuple
-
 from pandas import DataFrame
+from typing import Tuple
 
 import indication
 import signals
@@ -16,17 +15,21 @@ WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'
 
 
 def export_charts(symbols: list[str], end_datetime: datetime):
-    folder = f"docs/{end_datetime.strftime('%Y-%m-%dT%H%M')}"
-    log(f"Target: {folder}")
-    os.makedirs(folder, exist_ok=True)
-
+    folder: str | None = None
     symbols_signal = []
     symbols_long = []
     symbols_short = []
+    timestamp_last_candle: datetime | None = None
 
     for i, symbol in enumerate(symbols):
         log(f"=== {symbol} {i + 1}/{len(symbols)} ===")
         metadata_symbol, df = analyze_symbol(symbol, end_datetime)
+        timestamp_last_candle = metadata_symbol["timestamp"]
+
+        if folder is None:
+            folder = f"docs/{timestamp_last_candle.strftime('%Y-%m-%dT%H%M')}"
+            log(f"Target: {folder}")
+            os.makedirs(folder, exist_ok=True)
 
         if "L" in metadata_symbol["signals_long"]:
             export_chart(metadata_symbol, df, f"{folder}/{symbol}")
@@ -46,8 +49,8 @@ def export_charts(symbols: list[str], end_datetime: datetime):
 
     # report
     metadata = {
-        "timestamp": end_datetime,
-        'title': WEEKDAYS[end_datetime.weekday()] + ', ' + end_datetime.strftime('%d.%m.%Y %H:%M'),
+        "timestamp": timestamp_last_candle,
+        'title': WEEKDAYS[timestamp_last_candle.weekday()] + ', ' + timestamp_last_candle.strftime('%d.%m.%Y %H:%M'),
         'symbols': symbols,
         'symbols_signal': symbols_signal,
         'symbols_long': symbols_long,
