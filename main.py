@@ -24,23 +24,22 @@ for timestamp in timestamps:
     # todo log
     print(timestamp.isoformat())
 
-for timestamp in timestamps:
-    export_charts(symbols, timestamp)
-
 if len(timestamps) > 0:
-    write_timestamp(timestamps[-1])
-
-# process "near" next timestamp
-now = datetime.now(tz=TZ)
-next_timestamp = get_next_timestamp(now)
-if now + timedelta(minutes=15) > next_timestamp:
-    while True:
-        now = datetime.now(tz=TZ)
-        print(f'Waiting... now={now} until={next_timestamp.time()}')
-        if now >= next_timestamp:
-            break
-        sleep(60)
-
-    print(f'Report due now -> generate')
+    next_timestamp = timestamps[0]
     export_charts(symbols, next_timestamp)
     write_timestamp(next_timestamp)
+else:
+    # process "near" next timestamp
+    now = datetime.now(tz=TZ)
+    next_timestamp = get_next_timestamp(now)
+    if now + timedelta(minutes=15) > next_timestamp:
+        while True:
+            now = datetime.now(tz=TZ)
+            print(f'Waiting... now={now} until={next_timestamp.time()}')
+            if now >= next_timestamp:
+                break
+            sleep(60)
+
+        print(f'Report due now -> generate')
+        export_charts(symbols, next_timestamp)
+        write_timestamp(next_timestamp)
