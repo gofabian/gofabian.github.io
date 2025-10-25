@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from time import sleep
 
+from batch import batch
 from logic import export_charts
 from schedule import get_due_timestamps, write_timestamp, get_next_timestamp, TZ
 
@@ -16,7 +17,17 @@ symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK 
            "ICE", "CDNS", "GD", "BMY", "NOC", "WM", "ORLY", "MCO", "SNPS", "RCL", "SHW", "MMM", "MDLZ", "ELV", "CI",
            "ECL", "HWM", "WMB", "AJG", "AON", "MSI", "CTAS", "BK", "ABNB", "PNC", "GLW", "TDG", "EMR", "USB", "MAR",
            "ITW", "VST", "NSC", "UPS", "APO"]
+
+
 # symbols = ["HD"]
+
+def get_batch_fn(ts: datetime):
+    def batch_fn(symbols_batch: list[str]):
+        export_charts(symbols_batch, ts)
+        write_timestamp(ts)
+
+    return batch_fn
+
 
 # process timestamps in the past
 timestamps = get_due_timestamps()
@@ -26,8 +37,7 @@ for timestamp in timestamps:
 
 if len(timestamps) > 0:
     next_timestamp = timestamps[0]
-    export_charts(symbols, next_timestamp)
-    write_timestamp(next_timestamp)
+    batch(symbols, 55, 600, get_batch_fn(next_timestamp))
 else:
     # process "near" next timestamp
     now = datetime.now(tz=TZ)
@@ -41,5 +51,4 @@ else:
             sleep(60)
 
         print(f'Report due now -> generate')
-        export_charts(symbols, next_timestamp)
-        write_timestamp(next_timestamp)
+        batch(symbols, 55, 600, get_batch_fn(next_timestamp))
