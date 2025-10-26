@@ -25,6 +25,8 @@ https://github.com/gnzsnz/ib-gateway-docker
 
 ## todos
 
+Daten von docs separieren
+
 pro symbol
 
 - generate(from, until)

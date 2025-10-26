@@ -19,7 +19,7 @@ def write_index_html():
             report['folder'] = folder
             reports.append(report)
 
-    with open(f'docs/index.html', 'w') as f:
+    with open(f'docs/index.html', 'w', encoding="utf-8") as f:
         env = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
         template = env.get_template('index.html.jinja')
         html = template.render(
@@ -30,7 +30,7 @@ def write_index_html():
 
 
 def write_report_html(metadata: dict, folder: str):
-    with open(f'{folder}/index.html', 'w') as f:
+    with open(f'{folder}/index.html', 'w', encoding="utf-8") as f:
         env = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
         template = env.get_template('report.html.jinja')
         html = template.render(metadata)
@@ -38,7 +38,7 @@ def write_report_html(metadata: dict, folder: str):
 
 
 def write_chart_html(symbol: str, df: DataFrame, path: str):
-    with open(path, 'w') as f:
+    with open(path, 'w', encoding="utf-8") as f:
         fig = generate_plot(symbol, df)
         f.write(fig.to_html(include_plotlyjs='cdn'))
 
