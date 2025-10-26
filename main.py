@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from time import sleep
 
 from batch import batch
+from github import git_commit_and_push
 from logic import export_charts
 from schedule import get_due_timestamps, write_timestamp, get_next_timestamp, TZ
 
@@ -19,12 +20,13 @@ symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK 
            "ITW", "VST", "NSC", "UPS", "APO"]
 
 
-# symbols = ["HD"]
+symbols = ["NVDA"]
 
 def get_batch_fn(ts: datetime):
     def batch_fn(symbols_batch: list[str]):
         export_charts(symbols_batch, ts)
         write_timestamp(ts)
+        git_commit_and_push()
 
     return batch_fn
 
