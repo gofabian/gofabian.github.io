@@ -1,9 +1,9 @@
 import json
 import os
-import time
-from datetime import datetime
-from pandas import DataFrame
+from datetime import datetime, timedelta
 from typing import Tuple
+
+from pandas import DataFrame
 
 import indication
 import signals
@@ -14,20 +14,19 @@ from log import log
 WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
 
 
-def export_charts(symbols: list[str], end_datetime: datetime):
+def export_charts(symbols: list[str], end_datetime: datetime, progress: int):
     folder: str | None = None
     symbols_signal = []
     symbols_long = []
     symbols_short = []
-    timestamp_last_candle: datetime | None = None
+    metadata_symbol: dict | None = None
 
     for i, symbol in enumerate(symbols):
         log(f"=== {symbol} {i + 1}/{len(symbols)} ===")
         metadata_symbol, df = analyze_symbol(symbol, end_datetime)
-        timestamp_last_candle = metadata_symbol["timestamp"]
 
         if folder is None:
-            folder = f"docs/{timestamp_last_candle.strftime('%Y-%m-%dT%H%M')}"
+            folder = f"docs/{metadata_symbol['timestamp'].strftime('%Y-%m-%dT%H%M')}"
             log(f"Target: {folder}")
             os.makedirs(folder, exist_ok=True)
 
@@ -43,22 +42,23 @@ def export_charts(symbols: list[str], end_datetime: datetime):
         #     export_chart(metadata_symbol, df, f"{folder}/{symbol}")
         #     symbols_signal.append(symbol)
 
-        if (i + 1) < len(symbols):
-            # Max. 60 Requests pro 10 Minuten -> 1 Request pro 10 Sekunden
-            time.sleep(10)
-
     # report
     metadata = {
-        "timestamp": timestamp_last_candle,
-        'title': WEEKDAYS[timestamp_last_candle.weekday()] + ', ' + timestamp_last_candle.strftime('%d.%m.%Y %H:%M'),
+        "timestamp": metadata_symbol["timestamp"],
+        "timestamp_end": metadata_symbol["timestamp_end"],
+        "state": metadata_symbol["state"],
+        "progress": progress,
+        'title': WEEKDAYS[metadata_symbol["timestamp"].weekday()] + ', ' + metadata_symbol["timestamp"].strftime(
+            '%d.%m.%Y %H:%M'),
         'symbols': symbols,
         'symbols_signal': symbols_signal,
         'symbols_long': symbols_long,
         'symbols_short': symbols_short,
     }
-    with open(f'{folder}/metadata.json', 'w') as f:
+    with open(f'{folder}/metadata.json', 'w', encoding="utf-8") as f:
         md = metadata.copy()
         md['timestamp'] = md['timestamp'].isoformat()
+        md['timestamp_end'] = md['timestamp_end'].isoformat()
         json.dump(md, f, indent=2)
 
     write_report_html(metadata, folder)
@@ -85,6 +85,8 @@ def analyze_symbol(symbol: str, end_datetime: datetime) -> Tuple[dict, DataFrame
         signals_short = ""
 
     metadata = {
+        "timestamp_end": end_datetime,
+        "state": "complete" if dt_last_candle + timedelta(minutes=195) == end_datetime else "incomplete",
         "timestamp": dt_last_candle,
         "symbol": symbol,
         "signals_long": signals_long,
@@ -104,7 +106,8 @@ def export_chart(metadata: dict, df: DataFrame, folder: str):
     df.to_json(f"{folder}/data.json", orient='records')
 
     # metadata.json
-    with open(f'{folder}/metadata.json', 'w') as f:
+    with open(f'{folder}/metadata.json', 'w', encoding="utf-8") as f:
         md = metadata.copy()
         md['timestamp'] = md['timestamp'].isoformat()
+        md['timestamp_end'] = md['timestamp_end'].isoformat()
         json.dump(md, f, indent=2)

@@ -82,5 +82,5 @@ def read_timestamp() -> datetime | None:
 
 def write_timestamp(dt: datetime):
     metadata = {"timestamp": dt.isoformat()}
-    with open('docs/metadata.json', 'w') as f:
+    with open('docs/metadata.json', 'w', encoding="utf-8") as f:
         json.dump(metadata, f, indent=2)

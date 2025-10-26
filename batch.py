@@ -14,7 +14,7 @@ def batch(symbols: list[str], batch_size: int, sleep_secs: int, fn):
         symbols_batch = symbols[start:end]
 
         print(f"Batch {batch_num + 1}/{num_batches}: {len(symbols_batch)} Symbols")
-        fn(symbols_batch)
+        fn(symbols_batch, batch_num, num_batches)
 
         if batch_num < num_batches - 1:
             print(f"⏳ Warte 10 Minuten, um IB-Pacing einzuhalten...")

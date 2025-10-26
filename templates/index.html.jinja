@@ -45,7 +45,15 @@
         {% for report in reports -%}
             {% set day = datetime.fromisoformat(report.timestamp).day + datetime.fromisoformat(reports[0].timestamp).day -%}
             <tr class="date-{{ report.timestamp.split('T')[0] }}{{ ' bg-gray' if (day % 2) == 0 else '' }}">
-                <td><a href="{{ report.folder }}/index.html">{{ report.title }}</a></td>
+                <td>
+                    <a href="{{ report.folder }}/index.html">{{ report.title }}</a>
+                    {% if report.state == 'incomplete' %}
+                        <span style="color:red">🕑{{ report.timestamp_end.split('T')[1][:5] }}</span>
+                    {% endif %}
+                    {% if (report.progress | default(100)) < 100 %}
+                        <span>⌛</span>
+                    {% endif %}
+                </td>
                 <td>{{ report['symbols_long'] | length }}x Long, {{report['symbols_short'] | length}}x Short</td>
             </tr>
         {% endfor %}
