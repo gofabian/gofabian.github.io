@@ -5,10 +5,13 @@ from datetime import datetime, timedelta, timezone, time
 TZ = timezone(timedelta(hours=-4))
 
 VALID_TIMES = sorted([
-    time(hour=12, minute=0),  # 18:00
-    time(hour=12, minute=45),  # 18:45
-    time(hour=15, minute=0),  # 21:00
-    time(hour=16, minute=0),  # 22:00
+    time(hour=10, minute=0),
+    time(hour=11, minute=0),
+    time(hour=12, minute=0),
+    time(hour=12, minute=45),
+    time(hour=14, minute=0),
+    time(hour=15, minute=0),
+    time(hour=16, minute=0),
 ])
 
 
