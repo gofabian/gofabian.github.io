@@ -19,8 +19,8 @@ symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK 
            "ECL", "HWM", "WMB", "AJG", "AON", "MSI", "CTAS", "BK", "ABNB", "PNC", "GLW", "TDG", "EMR", "USB", "MAR",
            "ITW", "VST", "NSC", "UPS", "APO"]
 
+# symbols = ["NVDA"]
 
-symbols = ["NVDA"]
 
 def get_batch_fn(ts: datetime):
     def batch_fn(symbols_batch: list[str]):
