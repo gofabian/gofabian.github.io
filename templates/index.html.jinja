@@ -47,6 +47,9 @@
             <tr class="date-{{ report.timestamp.split('T')[0] }}{{ ' bg-gray' if (day % 2) == 0 else '' }}">
                 <td>
                     <a href="{{ report.folder }}/index.html">{{ report.title }}</a>
+                    {% if report.state == 'incomplete' or (report.progress | default(100)) < 100 %}
+                        <br>
+                    {% endif %}
                     {% if report.state == 'incomplete' %}
                         <span style="color:red">🕑{{ report.timestamp_end.split('T')[1][:5] }}</span>
                     {% endif %}
