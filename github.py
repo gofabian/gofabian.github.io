@@ -23,7 +23,10 @@ def git_commit_and_push():
                    check=False)  # kein Fehler, falls keine Änderungen
 
     # Falls in der Zwischenzeit neuere Commits existieren
-    subprocess.run(["git", "pull"], check=True)
+    try:
+        subprocess.run(["git", "pull"], check=True, text=True, capture_output=True)
+    except subprocess.CalledProcessError as e:
+        log("Git failed with message:\n", e.stderr)
     # Push zum Remote
     subprocess.run(["git", "push"], check=True)
 
