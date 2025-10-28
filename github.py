@@ -22,6 +22,8 @@ def git_commit_and_push():
     subprocess.run(["git", "commit", "-m", "Apply automatic changes"],
                    check=False)  # kein Fehler, falls keine Änderungen
 
+    # Falls in der Zwischenzeit neuere Commits existieren
+    subprocess.run(["git", "pull"], check=True)
     # Push zum Remote
     subprocess.run(["git", "push"], check=True)
 
