@@ -19,6 +19,7 @@ symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK 
            "ECL", "HWM", "WMB", "AJG", "AON", "MSI", "CTAS", "BK", "ABNB", "PNC", "GLW", "TDG", "EMR", "USB", "MAR",
            "ITW", "VST", "NSC", "UPS", "APO"]
 
+
 # symbols = ["NVDA"]
 
 
@@ -27,7 +28,7 @@ def get_batch_fn(ts: datetime):
         progress = ((batch_i + 1) * 100) // batch_all
         export_charts(symbols_batch, ts, progress)
         write_timestamp(ts)
-        git_commit_and_push()
+        git_commit_and_push(f"{batch_i + 1}/{batch_all}")
 
     return batch_fn
 
