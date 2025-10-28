@@ -4,7 +4,7 @@ import subprocess
 from log import log
 
 
-def git_commit_and_push():
+def git_commit_and_push(additional_text: str = ""):
     if os.getenv("GITHUB_ACTIONS") != "true":
         log("No Github Actions context -> skip 'git commit and push'")
         return
@@ -19,7 +19,7 @@ def git_commit_and_push():
 
     # Änderungen hinzufügen und committen
     subprocess.run(["git", "add", "."], check=True)
-    subprocess.run(["git", "commit", "-m", "Apply automatic changes"],
+    subprocess.run(["git", "commit", "-m", f"Apply automatic changes {additional_text}"],
                    check=False)  # kein Fehler, falls keine Änderungen
 
     # Falls in der Zwischenzeit neuere Commits existieren
