@@ -23,6 +23,7 @@ def git_commit_and_push(additional_text: str = ""):
                    check=False)  # kein Fehler, falls keine Änderungen
 
     # Falls in der Zwischenzeit neuere Commits existieren
+    subprocess.run(["git", "config", "pull.rebase", "false"], check=True)
     try:
         subprocess.run(["git", "pull"], check=True, text=True, capture_output=True)
     except subprocess.CalledProcessError as e:
