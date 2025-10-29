@@ -3,6 +3,7 @@ from time import sleep
 
 from batch import batch
 from github import git_commit_and_push
+from log import log
 from logic import export_charts
 from schedule import get_due_timestamps, write_timestamp, get_next_timestamp, TZ
 
@@ -37,7 +38,7 @@ def get_batch_fn(ts: datetime):
 timestamps = get_due_timestamps()
 for timestamp in timestamps:
     # todo log
-    print(timestamp.isoformat())
+    log(timestamp.isoformat())
 
 if len(timestamps) > 0:
     next_timestamp = timestamps[0]
@@ -49,10 +50,10 @@ else:
     if now + timedelta(minutes=15) > next_timestamp:
         while True:
             now = datetime.now(tz=TZ)
-            print(f'Waiting... now={now} until={next_timestamp.time()}')
+            log(f'Waiting... now={now} until={next_timestamp.time()}')
             if now >= next_timestamp:
                 break
             sleep(60)
 
-        print(f'Report due now -> generate')
+        log(f'Report due now -> generate')
         batch(symbols, 55, 600, get_batch_fn(next_timestamp))
