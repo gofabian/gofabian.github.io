@@ -4,7 +4,8 @@ Scans charts of S&P 500 stocks for short and long signals according to PJM train
 
 ## Market hours
 
-    09:30 - 16:00 -04:00 USA
+    09:30 - 16:00 -04:00 Eastern time summer
+    09:30 - 16:00 -05:00 Eastern time winter
     15:30 - 22:00 +02:00 Germany summer
     14:30 - 21:00 +01:00 Germany winter
 
