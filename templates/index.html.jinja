@@ -54,7 +54,7 @@
                         <span style="color:red">🕑{{ report.timestamp_end.split('T')[1][:5] }}</span>
                     {% endif %}
                     {% if (report.progress | default(100)) < 100 %}
-                        <span>⌛</span>
+                        <span>⌛{{ report.progress }}%</span>
                     {% endif %}
                 </td>
                 <td>{{ report['symbols_long'] | length }}x Long, {{report['symbols_short'] | length}}x Short</td>
