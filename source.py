@@ -44,8 +44,8 @@ def req_historical_data(
     df_195 = df_15.groupby(df_15.index.date, group_keys=False).apply(aggregate_daily)
     df_195 = df_195.reset_index(drop=True)
 
-    # nutze Börsenzeitzone (immer -04:00)
-    df_195['date'] = df_195['date'].dt.tz_convert('-04:00')
+    # nutze Börsenzeitzone (-04:00 / -05:00)
+    df_195['date'] = df_195['date'].dt.tz_convert('America/New_York')
     # print(df_195.to_string())
 
     return df_195

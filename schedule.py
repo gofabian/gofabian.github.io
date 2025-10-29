@@ -1,8 +1,9 @@
 import json
 import os
 from datetime import datetime, timedelta, timezone, time
+from zoneinfo import ZoneInfo
 
-TZ = timezone(timedelta(hours=-4))
+TZ = ZoneInfo("America/New_York")
 
 VALID_TIMES = sorted([
     time(hour=10, minute=0),
