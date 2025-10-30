@@ -28,6 +28,8 @@ def get_batch_fn(ts: datetime):
     def batch_fn(symbols_batch: list[str], batch_i: int, batch_all: int):
         progress = ((batch_i + 1) * 100) // batch_all
         export_charts(symbols_batch, ts, progress)
+        if (batch_i + 1) == batch_all:
+            write_timestamp(ts)
         git_commit_and_push(f"{batch_i + 1}/{batch_all}")
 
     return batch_fn
@@ -42,7 +44,6 @@ for timestamp in timestamps:
 if len(timestamps) > 0:
     next_timestamp = timestamps[0]
     batch(symbols, 55, 600, get_batch_fn(next_timestamp))
-    write_timestamp(next_timestamp)
 else:
     # process "near" next timestamp
     now = datetime.now(tz=TZ)
@@ -57,4 +58,3 @@ else:
 
         log(f'Report due now -> generate')
         batch(symbols, 55, 600, get_batch_fn(next_timestamp))
-        write_timestamp(next_timestamp)
