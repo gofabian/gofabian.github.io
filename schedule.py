@@ -6,12 +6,9 @@ from zoneinfo import ZoneInfo
 TZ = ZoneInfo("America/New_York")
 
 VALID_TIMES = sorted([
-    time(hour=10, minute=0),
-    time(hour=11, minute=0),
     time(hour=12, minute=0),
     time(hour=12, minute=45),
-    time(hour=14, minute=0),
-    time(hour=15, minute=0),
+    time(hour=15, minute=15),
     time(hour=16, minute=0),
 ])
 
