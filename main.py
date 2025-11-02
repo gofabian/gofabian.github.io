@@ -1,60 +1,59 @@
+import time
 from datetime import datetime, timedelta
-from time import sleep
 
-from batch import batch
-from github import git_commit_and_push
+import data
+import schedule
+import website
 from log import log
-from logic import export_charts
-from schedule import get_due_timestamps, write_timestamp, get_next_timestamp, TZ
 
-# s&p500 MK>70B
-symbols = ["NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK B", "ORCL", "JPM", "WMT",
-           "LLY", "V", "NFLX", "MA", "XOM", "JNJ", "PLTR", "COST", "ABBV", "HD", "BAC", "AMD", "PG", "UNH", "GE", "CVX",
-           "KO", "CSCO", "IBM", "TMUS", "WFC", "PM", "MS", "GS", "CRM", "CAT", "ABT", "AXP", "MU", "MCD", "LIN", "MRK",
-           "RTX", "PEP", "APP", "DIS", "TMO", "UBER", "BX", "NOW", "BLK", "ANET", "T", "INTU", "C", "GEV", "AMAT",
-           "QCOM", "INTC", "LRCX", "NEE", "BKNG", "SCHW", "VZ", "BA", "ACN", "TXN", "AMGN", "TJX", "ISRG", "APH", "DHR",
-           "GILD", "SPGI", "ETN", "PANW", "ADBE", "BSX", "PFE", "SYK", "PGR", "KLAC", "UNP", "COF", "LOW", "HON",
-           "CRWD", "HOOD", "MDT", "IBKR", "CEG", "DE", "LMT", "DASH", "ADI", "ADP", "CB", "COP", "MO", "CMCSA", "SO",
-           "KKR", "VRTX", "DELL", "MMC", "NKE", "CVS", "NEM", "DUK", "CME", "HCA", "MCK", "TT", "PH", "COIN", "SBUX",
-           "ICE", "CDNS", "GD", "BMY", "NOC", "WM", "ORLY", "MCO", "SNPS", "RCL", "SHW", "MMM", "MDLZ", "ELV", "CI",
-           "ECL", "HWM", "WMB", "AJG", "AON", "MSI", "CTAS", "BK", "ABNB", "PNC", "GLW", "TDG", "EMR", "USB", "MAR",
-           "ITW", "VST", "NSC", "UPS", "APO"]
+SYMBOLS_SP500 = [
+    "NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK B", "ORCL", "JPM", "WMT", "LLY", "V", "NFLX",
+    "MA", "XOM", "JNJ", "PLTR", "COST", "ABBV", "HD", "BAC", "AMD", "PG", "UNH", "GE", "CVX", "KO", "CSCO", "IBM",
+    "TMUS", "WFC", "PM", "MS", "GS", "CRM", "CAT", "ABT", "AXP", "MU", "MCD", "LIN", "MRK", "RTX", "PEP", "APP", "DIS",
+    "TMO", "UBER", "BX", "NOW", "BLK", "ANET", "T", "INTU", "C", "GEV", "AMAT", "QCOM", "INTC", "LRCX", "NEE", "BKNG",
+    "SCHW", "VZ", "BA", "ACN", "TXN", "AMGN", "TJX", "ISRG", "APH", "DHR", "GILD", "SPGI", "ETN", "PANW", "ADBE", "BSX",
+    "PFE", "SYK", "PGR", "KLAC", "UNP", "COF", "LOW", "HON", "CRWD", "HOOD", "MDT", "IBKR", "CEG", "DE", "LMT", "DASH",
+    "ADI", "ADP", "CB", "COP", "MO", "CMCSA", "SO", "KKR", "VRTX", "DELL", "MMC", "NKE", "CVS", "NEM", "DUK", "CME",
+    "HCA", "MCK", "TT", "PH", "COIN", "SBUX", "ICE", "CDNS", "GD", "BMY", "NOC", "WM", "ORLY", "MCO", "SNPS", "RCL",
+    "SHW", "MMM", "MDLZ", "ELV", "CI", "ECL", "HWM", "WMB", "AJG", "AON", "MSI", "CTAS", "BK", "ABNB", "PNC", "GLW",
+    "TDG", "EMR", "USB", "MAR", "ITW", "VST", "NSC", "UPS", "APO"
+]
 
 
-# symbols = ["NVDA"]
+def cicd(symbols: list[str]):
+    request_start = schedule.get_start_timestamp()
+    request_end = schedule.get_end_timestamp()
+    log(f"start={request_start.isoformat()} end={request_end.isoformat()}")
+
+    # past candles?
+    if request_start < request_end:
+        update(symbols, request_start, request_end)
+        return
+
+    # next candle soon?
+    now = datetime.now(tz=schedule.TZ)
+    request_end = schedule.get_next_timestamp(now, schedule.SCHEDULE_TIMES)
+    if request_end - timedelta(minutes=15) > now:
+        log("Cancelled.")
+        return
+
+    # next candle soon
+    while True:
+        now = datetime.now(tz=schedule.TZ)
+        log(f'Waiting... now={now} until={request_end.isoformat()}')
+        if now >= request_end:
+            break
+        time.sleep(60)
+
+    # next candle now
+    log(f"start={request_start.isoformat()} end={request_end.isoformat()}")
+    request_start = schedule.get_previous_timestamp(request_end, schedule.CANDLE_START_TIMES)
+    update(symbols, request_start, request_end)
 
 
-def get_batch_fn(ts: datetime):
-    def batch_fn(symbols_batch: list[str], batch_i: int, batch_all: int):
-        progress = ((batch_i + 1) * 100) // batch_all
-        export_charts(symbols_batch, ts, progress)
-        if (batch_i + 1) == batch_all:
-            write_timestamp(ts)
-        git_commit_and_push(f"{batch_i + 1}/{batch_all}")
-
-    return batch_fn
+def update(symbols: list[str], request_start: datetime, request_end: datetime):
+    data.update_data(symbols, request_end, '3 D')
+    website.update_website(symbols, request_start, request_end)
 
 
-# process timestamps in the past
-timestamps = get_due_timestamps()
-for timestamp in timestamps:
-    # todo log
-    log(timestamp.isoformat())
-
-if len(timestamps) > 0:
-    next_timestamp = timestamps[0]
-    batch(symbols, 55, 600, get_batch_fn(next_timestamp))
-else:
-    # process "near" next timestamp
-    now = datetime.now(tz=TZ)
-    next_timestamp = get_next_timestamp(now)
-    if now + timedelta(minutes=15) > next_timestamp:
-        while True:
-            now = datetime.now(tz=TZ)
-            log(f'Waiting... now={now} until={next_timestamp.time()}')
-            if now >= next_timestamp:
-                break
-            sleep(60)
-
-        log(f'Report due now -> generate')
-        batch(symbols, 55, 600, get_batch_fn(next_timestamp))
+cicd(SYMBOLS_SP500)

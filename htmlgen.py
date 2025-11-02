@@ -1,4 +1,3 @@
-import json
 import os
 from datetime import datetime
 
@@ -7,6 +6,10 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pandas import DataFrame
 from plotly.subplots import make_subplots
 
+import fileio
+
+WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
+
 
 def write_index_html():
     folders = [f for f in os.listdir("docs") if os.path.isdir(f"docs/{f}")]
@@ -14,10 +17,11 @@ def write_index_html():
 
     reports = []
     for folder in folders:
-        with open(f'docs/{folder}/metadata.json', 'r') as f:
-            report = json.load(f)
-            report['folder'] = folder
-            reports.append(report)
+        metadata = fileio.dict_read(f'docs/{folder}/metadata.json')
+        metadata['folder'] = folder
+        metadata['title'] = WEEKDAYS[metadata["timestamp_start"].weekday()] + ', ' + metadata[
+            "timestamp_start"].strftime('%d.%m.%Y %H:%M')
+        reports.append(metadata)
 
     with open(f'docs/index.html', 'w', encoding="utf-8") as f:
         env = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
@@ -30,6 +34,10 @@ def write_index_html():
 
 
 def write_report_html(metadata: dict, folder: str):
+    metadata = metadata.copy()
+    metadata['title'] = WEEKDAYS[metadata["timestamp_start"].weekday()] + ', ' + metadata["timestamp_start"].strftime(
+        '%d.%m.%Y %H:%M')
+
     with open(f'{folder}/index.html', 'w', encoding="utf-8") as f:
         env = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
         template = env.get_template('report.html.jinja')
@@ -85,7 +93,7 @@ def generate_plot(symbol: str, df: DataFrame) -> go.Figure:
         row=3, col=1
     )
 
-    df_long = df[df['signal_long'].notna()].copy()
+    df_long = df[df['signal_long'] != ""].copy()
     df_long['y'] = 'signals'
     fig.add_trace(
         go.Scatter(name='long', x=df_long.index, y=df_long['y'], text=df_long['signal_long'],
@@ -94,7 +102,7 @@ def generate_plot(symbol: str, df: DataFrame) -> go.Figure:
         row=4, col=1
     )
 
-    df_short = df[df['signal_short'].notna()].copy()
+    df_short = df[df['signal_short'] != ""].copy()
     df_short['y'] = 'signals'
     fig.add_trace(
         go.Scatter(name='short', x=df_short.index, y=df_short['y'], text=df_short['signal_short'],

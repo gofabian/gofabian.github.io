@@ -26,26 +26,7 @@ https://github.com/gnzsnz/ib-gateway-docker
 
 ## todos
 
-Daten von docs separieren
-
-pro symbol
-
-- generate(from, until)
-- duration=100D + days(until-from)/7*5
-- req_historical_data (end_datetime=until, duration="200 D" + days(until-from)/7*5)
-- Indikatoren generieren
-- Signale für df.tail(-180)
-- L/S suchen in from..until
-- an entsprechendem Ort chart.html/metadata.json/data.json exportieren
-- report.html neu generieren
-- index.html neu generieren
-- in git hochladen
-
-Progress auf Webseite anzeigen
-
-- grün: Generierung abgeschlossen
-- gelb: Generierung läuft
-- rot: Fehler in Generierung
+Progress-Timestamp separieren oder gar nicht?
 
 UI
 

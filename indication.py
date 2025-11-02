@@ -1,18 +1,20 @@
-import pandas as pd
+from pandas import DataFrame, Series
 
 
-def analyze(df: pd.DataFrame):
+def analyze(df: DataFrame) -> DataFrame:
+    df = df.copy()
     df['ema5'] = ema(df, 5)
     df['ema20'] = ema(df, 20)
     df['rsi'] = rsi(df)
     df['rsi_sma'] = df['rsi'].rolling(14).mean()
+    return df
 
 
-def ema(df, n) -> pd.Series:
+def ema(df: DataFrame, n: int) -> Series:
     return df['close'].ewm(span=n, adjust=False).mean()
 
 
-def rsi(df) -> pd.Series:
+def rsi(df: DataFrame) -> Series:
     #
     # Calculate RSI (>=200 Datenpunkte notwendig)
     #

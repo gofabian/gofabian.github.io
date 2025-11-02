@@ -40,6 +40,9 @@ jobs:
           --health-retries 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Setup python
         uses: actions/setup-python@v6
@@ -55,3 +58,7 @@ jobs:
         run: |
           poetry install
           poetry run python main.py
+
+      - uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          branch: main

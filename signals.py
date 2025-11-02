@@ -1,10 +1,11 @@
 #
 # Find signals
 #
-import pandas as pd
+from pandas import DataFrame
 
 
-def find_signals(df: pd.DataFrame):
+def find_signals(df: DataFrame) -> DataFrame:
+    df = df.copy()
     df_prev = df.shift()
 
     # long
@@ -18,8 +19,8 @@ def find_signals(df: pd.DataFrame):
     ema5_crossing_ema20_down = (df['ema5'] < df['ema20']) & (df_prev['ema5'] >= df_prev['ema20'])
 
     # Neue Spalten initialisieren
-    df['signal_long'] = None
-    df['signal_short'] = None
+    df['signal_long'] = ''
+    df['signal_short'] = ''
 
     # Finde Signale
     rsi_crossed_sma_up = False
@@ -28,9 +29,6 @@ def find_signals(df: pd.DataFrame):
     rsi_crossed_sma_down = False
     price_crossed_ema20_down = False
     ema5_crossed_ema20_down = False
-
-    # todo: ohne Schleife möglich? Effizienter über Data-Frame-Funktionen
-    # todo: Ergebnis mit generiertem Chart und TradingView-Vergleich prüfen
 
     for index in df.index:
         signal_long = []
@@ -85,3 +83,5 @@ def find_signals(df: pd.DataFrame):
             df.loc[index, 'signal_long'] = '<br>'.join(signal_long)
         if len(signal_short) > 0:
             df.loc[index, 'signal_short'] = '<br>'.join(signal_short)
+
+    return df
