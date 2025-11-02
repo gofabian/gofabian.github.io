@@ -6,9 +6,22 @@ from zoneinfo import ZoneInfo
 TZ = ZoneInfo("America/New_York")
 
 SCHEDULE_TIMES = [
+    time(hour=11, minute=0),
+    time(hour=11, minute=15),
+    time(hour=11, minute=30),
+    time(hour=11, minute=45),
     time(hour=12, minute=0),
+    time(hour=12, minute=15),
+    time(hour=12, minute=30),
     time(hour=12, minute=45),
+
+    time(hour=14, minute=15),
+    time(hour=14, minute=30),
+    time(hour=14, minute=45),
+    time(hour=15, minute=0),
     time(hour=15, minute=15),
+    time(hour=15, minute=30),
+    time(hour=15, minute=45),
     time(hour=16, minute=0),
 ]
 
