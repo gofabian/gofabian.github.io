@@ -12,30 +12,28 @@ FOLDER = 'data'
 
 
 # update data folder
-def update_data(symbols: list[str], end: datetime, duration: str):
-    log(f"Updating data: symbols={len(symbols)} folder='{FOLDER}' end={end} duration={duration}")
+def update_data(symbols: list[str], end: datetime):
+    log(f"Updating data: symbols={len(symbols)} folder='{FOLDER}' end={end}")
     os.makedirs(FOLDER, exist_ok=True)
-    dfs_plus = source.download_symbols_fast(symbols, end, duration)
 
+    # update data for existing symbols
+    symbols_old = [symbol for symbol in symbols if fileio.df_exists(FOLDER, symbol)]
+    log(f"Update data for symbols={len(symbols_old)} duration=3 D")
+    dfs_plus = source.download_symbols_in_parallel(symbols_old, end, '3 D')
     for df_plus in dfs_plus:
         symbol = df_plus.attrs['symbol']
         df_base = fileio.df_read(FOLDER, symbol)
         df = _concat_dfs(df_base, df_plus)
         fileio.df_write(FOLDER, df)
 
-    log(f"Updated data")
-
-
-# overwrite data folder
-def recreate_data(symbols: list[str], end: datetime, duration: str):
-    log(f"Recreating data: symbols={len(symbols)} folder='{FOLDER}' end={end} duration={duration}")
-    os.makedirs(FOLDER, exist_ok=True)
-
-    for symbol in symbols:
-        df = source.download_symbol_slow(symbol, end, duration)
+    # add data for new symbols
+    symbols_new = [symbol for symbol in symbols if symbol not in symbols_old]
+    log(f"Create data for symbols={len(symbols_new)} duration=100 D")
+    for symbol in symbols_new:
+        df = source.download_symbol(symbol, end, '1 Y')
         fileio.df_write(FOLDER, df)
 
-    log(f"Recreated data")
+    log(f"Updated data")
 
 
 def _concat_dfs(df_base: DataFrame, df_plus: DataFrame) -> DataFrame:
