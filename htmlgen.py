@@ -48,31 +48,25 @@ def write_report_html(metadata: dict, folder: str):
 def write_chart_html(symbol: str, df: DataFrame, path: str):
     with open(path, 'w', encoding="utf-8") as f:
         fig = generate_plot(symbol, df)
-        f.write(fig.to_html(include_plotlyjs='cdn'))
+         config = {
+            'displayModeBar': False,  # Toolbar ausblenden
+            'scrollZoom': False,  # kein Scroll-Zoom
+            'doubleClick': False,  # kein Reset/Zoom per Doppelklick
+        }
+        f.write(fig.to_html(include_plotlyjs='cdn', config=config))
 
 
 def generate_plot(symbol: str, df: DataFrame) -> go.Figure:
-    hover_texts = []
-
-    for i in range(len(df.close)):
-        hover_texts.append(
-            df.date[i].strftime('%Y-%m-%d %H:%M') +
-            '<br><br>Open: ' + str(round(df.open[i], 2)) + '<br>High: ' + str(round(df.high[i], 2)) +
-            '<br>Low: ' + str(round(df.low[i], 2)) + '<br>Close: ' + str(round(df.close[i], 2))
-        )
-
     fig = make_subplots(rows=4, cols=1, shared_xaxes=True, vertical_spacing=0.02,
                         specs=[[{"rowspan": 2}], [None], [{}], [{}]])
     fig.add_trace(
         go.Candlestick(
-            name='price',
+            name='candle',
             x=df.index,
             open=df['open'],
             high=df['high'],
             low=df['low'],
             close=df['close'],
-            hoverinfo='text',
-            text=hover_texts,
         ),
         row=1, col=1
     )
@@ -111,9 +105,17 @@ def generate_plot(symbol: str, df: DataFrame) -> go.Figure:
         row=4, col=1
     )
 
-    fig.update_layout(xaxis=dict(rangeslider=dict(visible=False)))
-    fig.update_layout(hovermode="x unified")
-    fig.update_layout(title_text=symbol)
+    fig.update_layout(
+        xaxis=dict(
+            tickmode='array',
+            tickvals=df.index,
+            ticktext=df['date'].dt.strftime('%Y-%m-%d %H:%M'),
+            rangeslider=dict(visible=False)
+        ),
+        hovermode='x unified',
+        dragmode=False,
+        title_text=symbol
+    )
     fig.update_traces(xaxis='x1')
 
     return fig
