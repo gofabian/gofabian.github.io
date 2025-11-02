@@ -25,14 +25,11 @@ def download_symbol_slow(symbol: str, end: datetime, duration: str) -> DataFrame
 
 
 def download_symbol(symbol: str, end: datetime, duration: str) -> DataFrame:
-    async def do_async():
-        ib = IB()
-        await ib.connectAsync(IB_HOST, IB_PORT, clientId=1)
-        df = await _download_symbol_async(ib, symbol, end, duration)
-        ib.disconnect()
-        return df
-
-    return asyncio.run(do_async())
+    ib = IB()
+    ib.connect(IB_HOST, IB_PORT, clientId=1)
+    df = _download_symbol_sync(ib, symbol, end, duration)
+    ib.disconnect()
+    return df
 
 
 # for short durations < '1 W' (depends on bar size)
@@ -70,6 +67,25 @@ async def _download_symbol_async(ib: IB, symbol: str, end: datetime, duration: s
     )
     log(f"Downloaded {symbol}")
 
+    return _convert_bars15_to_df195(symbol, end, bars)
+
+
+def _download_symbol_sync(ib: IB, symbol: str, end: datetime, duration: str) -> DataFrame:
+    log(f"Downloading symbol={symbol} end={end.isoformat()}, duration={duration}")
+    bars = ib.reqHistoricalData(
+        Stock(symbol, 'SMART', 'USD'),
+        endDateTime=end,
+        durationStr=duration,
+        barSizeSetting='15 mins',
+        whatToShow='TRADES',
+        useRTH=True
+    )
+    log(f"Downloaded {symbol}")
+
+    return _convert_bars15_to_df195(symbol, end, bars)
+
+
+def _convert_bars15_to_df195(symbol, end, bars) -> DataFrame:
     # switch to pandas world
     df_15 = util.df(bars)
 
