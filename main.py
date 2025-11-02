@@ -72,9 +72,8 @@ def cicd(symbols: list[str]):
 
 
 def update(symbols: list[str], request_start: datetime, request_end: datetime):
-    # data.update_data(symbols, request_end)
+    data.update_data(symbols, request_end)
     website.update_website(symbols, request_start, request_end)
 
 
-# cicd(SYMBOLS_SP500)
-cicd(["AMGN"])
+cicd(SYMBOLS_SP500)
