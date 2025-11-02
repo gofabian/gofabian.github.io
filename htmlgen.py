@@ -48,7 +48,7 @@ def write_report_html(metadata: dict, folder: str):
 def write_chart_html(symbol: str, df: DataFrame, path: str):
     with open(path, 'w', encoding="utf-8") as f:
         fig = generate_plot(symbol, df)
-         config = {
+        config = {
             'displayModeBar': False,  # Toolbar ausblenden
             'scrollZoom': False,  # kein Scroll-Zoom
             'doubleClick': False,  # kein Reset/Zoom per Doppelklick
