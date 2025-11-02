@@ -57,6 +57,9 @@ def write_chart_html(symbol: str, df: DataFrame, path: str):
 
 
 def generate_plot(symbol: str, df: DataFrame) -> go.Figure:
+    # df = df.tail(-40)
+    df = df.tail(20)
+
     fig = make_subplots(rows=4, cols=1, shared_xaxes=True, vertical_spacing=0.02,
                         specs=[[{"rowspan": 2}], [None], [{}], [{}]])
     fig.add_trace(
@@ -114,6 +117,9 @@ def generate_plot(symbol: str, df: DataFrame) -> go.Figure:
         ),
         hovermode='x unified',
         dragmode=False,
+        autosize=True,
+        height=800,
+        margin=dict(l=40, r=20, t=50, b=40),
         title_text=symbol
     )
     fig.update_traces(xaxis='x1')
