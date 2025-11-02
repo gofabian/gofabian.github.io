@@ -7,16 +7,36 @@ import website
 from log import log
 
 SYMBOLS_SP500 = [
-    "NVDA", "MSFT", "AAPL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK B", "ORCL", "JPM", "WMT", "LLY", "V", "NFLX",
-    "MA", "XOM", "JNJ", "PLTR", "COST", "ABBV", "HD", "BAC", "AMD", "PG", "UNH", "GE", "CVX", "KO", "CSCO", "IBM",
-    "TMUS", "WFC", "PM", "MS", "GS", "CRM", "CAT", "ABT", "AXP", "MU", "MCD", "LIN", "MRK", "RTX", "PEP", "APP", "DIS",
-    "TMO", "UBER", "BX", "NOW", "BLK", "ANET", "T", "INTU", "C", "GEV", "AMAT", "QCOM", "INTC", "LRCX", "NEE", "BKNG",
-    "SCHW", "VZ", "BA", "ACN", "TXN", "AMGN", "TJX", "ISRG", "APH", "DHR", "GILD", "SPGI", "ETN", "PANW", "ADBE", "BSX",
-    "PFE", "SYK", "PGR", "KLAC", "UNP", "COF", "LOW", "HON", "CRWD", "HOOD", "MDT", "IBKR", "CEG", "DE", "LMT", "DASH",
-    "ADI", "ADP", "CB", "COP", "MO", "CMCSA", "SO", "KKR", "VRTX", "DELL", "MMC", "NKE", "CVS", "NEM", "DUK", "CME",
-    "HCA", "MCK", "TT", "PH", "COIN", "SBUX", "ICE", "CDNS", "GD", "BMY", "NOC", "WM", "ORLY", "MCO", "SNPS", "RCL",
-    "SHW", "MMM", "MDLZ", "ELV", "CI", "ECL", "HWM", "WMB", "AJG", "AON", "MSI", "CTAS", "BK", "ABNB", "PNC", "GLW",
-    "TDG", "EMR", "USB", "MAR", "ITW", "VST", "NSC", "UPS", "APO"
+    "NVDA", "MSFT", "AAPL", "GOOGL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK B", "WMT", "ORCL", "JPM", "LLY", "V",
+    "NFLX", "MA", "XOM", "JNJ", "PLTR", "COST", "ABBV", "HD", "BAC", "AMD", "PG", "UNH", "GE", "CVX", "KO", "CSCO",
+    "WFC", "IBM", "TMUS", "MS", "CAT", "PM", "AXP", "CRM", "GS", "MU", "ABT", "MCD", "MRK", "LIN", "RTX", "PEP", "TMO",
+    "APP", "DIS", "UBER", "BX", "BLK", "T", "NOW", "INTU", "ANET", "AMAT", "C", "LRCX", "QCOM", "NEE", "INTC", "VZ",
+    "SCHW", "BKNG", "GEV", "BA", "AMGN", "TXN", "TJX", "ISRG", "APH", "GILD", "DHR", "ACN", "BSX", "KLAC", "ETN",
+    "SPGI", "SYK", "PANW", "ADBE", "PFE", "LOW", "COF", "UNP", "PGR", "HON", "DE", "MDT", "CRWD", "CEG", "ADI", "LMT",
+    "HOOD", "ADP", "DASH", "MO", "CMCSA", "COP", "SO", "CB", "VRTX", "KKR", "CVS", "DELL", "DUK", "HCA", "NEM", "NKE",
+    "MCK", "SBUX", "CME", "MMC", "PH", "TT", "GD", "CDNS", "BMY", "ICE", "WM", "COIN", "ORLY", "NOC", "MCO", "SNPS",
+    "SHW", "RCL", "MMM", "MDLZ", "CI", "ELV", "ECL", "ABNB", "HWM", "WMB", "CTAS", "BK", "AON", "MSI", "UPS", "EMR",
+    "ITW", "GLW", "AJG", "TDG", "JCI", "USB", "NSC", "MAR", "PNC", "APO", "RSG", "MNST", "VST", "CSX", "AZO", "FI",
+    "TEL", "ADSK", "PYPL", "CL", "FTNT", "PWR", "ZTS", "URI", "COR", "AEP", "WDAY", "REGN", "HLT", "KMI", "SRE", "FCX",
+    "TRV", "EOG", "AFL", "CMI", "APD", "CMG", "FDX", "MPC", "GM", "TFC", "ROP", "BDX", "NXPI", "DDOG", "LHX", "AXON",
+    "PSX", "MET", "D", "ALL", "ROST", "IDXX", "NDAQ", "EA", "PCAR", "VLO", "FAST", "SLB", "EXC", "TTWO", "MPWR", "STX",
+    "XEL", "GRMN", "CARR", "F", "CBRE", "XYZ", "DHI", "KR", "GWW", "PAYX", "WBD", "BKR", "AMP", "EW", "WDC", "CPRT",
+    "OKE", "AIG", "AME", "ETR", "PEG", "EBAY", "CTVA", "MSCI", "TGT", "YUM", "KMB", "FANG", "OXY", "A", "RMD", "ROK",
+    "VMC", "DAL", "FICO", "CHTR", "SYY", "KDP", "HSY", "MLM", "WEC", "TKO", "CAH", "CCL", "ED", "EL", "PCG", "LYV",
+    "OTIS", "XYL", "PRU", "MCHP", "HIG", "FIS", "IQV", "GEHC", "EQT", "LVS", "DD", "WAB", "HUM", "NRG", "VRSK", "ACGL",
+    "CTSH", "WTW", "RJF", "UAL", "TRGP", "LEN", "STT", "CSGP", "SMCI", "EME", "IR", "ADM", "HPE", "NUE", "KHC", "IBKR",
+    "DTE", "KVUE", "TSCO", "AWK", "ODFL", "BRO", "K", "AEE", "ATO", "MTB", "EFX", "WRB", "KEYS", "MTD", "PPL", "FE",
+    "FITB", "ROL", "ES", "BR", "SYF", "EXPE", "TDY", "DXCM", "CNP", "GIS", "HPQ", "VLTO", "CBOE", "FSLR", "VRSN", "IP",
+    "STZ", "PHM", "FOX", "FOXA", "TTD", "TPR", "PTC", "EXE", "CINF", "ULTA", "NTRS", "NTAP", "LH", "LDOS", "STE", "DG",
+    "PPG", "DOV", "TROW", "HBAN", "HUBB", "WSM", "JBL", "PODD", "CMS", "TER", "NVR", "DRI", "TYL", "EIX", "TPL", "CHD",
+    "SW", "ON", "CFG", "DGX", "RF", "STLD", "BIIB", "GPN", "LULU", "L", "NI", "ZBH", "CPAY", "DVN", "CDW", "WAT", "RL",
+    "DLTR", "BG", "WST", "HAL", "AMCR", "KEY", "J", "GPC", "TRMB", "LII", "TSN", "PKG", "MKC", "APTV", "EVRG", "PSKY",
+    "IT", "PNR", "GDDY", "SNA", "LUV", "PFG", "LNT", "CTRA", "CNC", "FFIV", "INCY", "BBY", "FTV", "IFF", "GEN", "EXPD",
+    "JBHT", "HOLX", "DOW", "NWS", "NWSA", "ALLE", "CHRW", "OMC", "ZBRA", "LYB", "DECK", "ERIE", "EG", "CLX", "TXT",
+    "COO", "MAS", "DPZ", "BLDR", "BF B", "CF", "HRL", "BALL", "NDSN", "UHS", "IEX", "SOLV", "AVY", "WYNN", "BAX",
+    "VTRS", "PAYC", "BEN", "SJM", "SWKS", "GNRC", "PNW", "JKHY", "HII", "GL", "ALB", "RVTY", "FDS", "POOL", "DAY",
+    "AIZ", "SWK", "HAS", "AKAM", "MOH", "AES", "NCLH", "IVZ", "MRNA", "AOS", "IPG", "TECH", "ALGN", "TAP", "MOS", "CPB",
+    "LW", "DVA", "CAG", "CRL", "MGM", "APA", "EPAM", "MHK", "MTCH", "LKQ", "HSIC", "EMN", "KMX"
 ]
 
 
@@ -52,7 +72,7 @@ def cicd(symbols: list[str]):
 
 
 def update(symbols: list[str], request_start: datetime, request_end: datetime):
-    data.update_data(symbols, request_end, '3 D')
+    data.update_data(symbols, request_end)
     website.update_website(symbols, request_start, request_end)
 
 
