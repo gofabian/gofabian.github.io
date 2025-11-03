@@ -49,7 +49,7 @@
                     <a href="{{ report.folder }}/index.html">{{ report.title }}</a>
                     {% if report.state == 'incomplete' %}
                         <br>
-                        <span style="color:red">🕑{{ report.timestamp_end.split('T')[1][:5] }}</span>
+                        <span style="color:red">🕑{{ report.timestamp_end.strftime("%H:%M") }}</span>
                     {% endif %}
                 </td>
                 <td>{{ report['symbols_long'] | length }}x Long, {{report['symbols_short'] | length}}x Short</td>
