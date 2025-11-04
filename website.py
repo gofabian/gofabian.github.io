@@ -18,22 +18,6 @@ def update_website(symbols: list[str], start: datetime, end: datetime):
     schedule.write_schedule_timestamp(end)
 
 
-def analyze(df: DataFrame, start: datetime, end: datetime) -> DataFrame:
-    log(f"Analyzing data for {df.attrs['symbol']}")
-
-    # add indicators
-    start_indication = start - timedelta(days=100 // 5 * 7)
-    df = df[(df["date"] >= start_indication) & (df["date"] <= end)]
-    df = indication.analyze(df)
-
-    # add signals
-    start_signals = start - timedelta(days=30)  # >30 candles
-    df = df[start_signals <= df["date"]]
-    df = signals.find_signals(df)
-
-    return df
-
-
 def write_candle_pages(symbols: list[str], start: datetime, end: datetime):
     log(f"Writing candle pages for {start.isoformat()}...{end.isoformat()}")
 
@@ -44,7 +28,11 @@ def write_candle_pages(symbols: list[str], start: datetime, end: datetime):
         # for each symbol+timestamp -> generate chart.html and metadata.json
         df_focus = df[df["date"] >= start]
         for candle in df_focus.itertuples():
-            if "L" not in candle.signal_long and "S" not in candle.signal_short:
+            if 'L' in candle.signal_long:
+                advice = 'buy'
+            elif 'S' in candle.signal_short:
+                advice = 'sell'
+            else:
                 continue
 
             if candle.Index == df.index[-1]:
@@ -62,12 +50,27 @@ def write_candle_pages(symbols: list[str], start: datetime, end: datetime):
                 "timestamp_start": candle.date,
                 "timestamp_end": candle_end,
                 "state": candle_state,
-                "signal_long": candle.signal_long,
-                "signal_short": candle.signal_short,
+                "advice": advice,
             }
 
             candle_df = df[df['date'] <= candle.date].tail(30).reset_index(drop=True)
             write_candle_page(metadata, candle_df)
+
+
+def analyze(df: DataFrame, start: datetime, end: datetime) -> DataFrame:
+    log(f"Analyzing data for {df.attrs['symbol']}")
+
+    # add indicators
+    start_indication = start - timedelta(days=100 // 5 * 7)
+    df = df[(df["date"] >= start_indication) & (df["date"] <= end)]
+    df = indication.analyze(df)
+
+    # add signals
+    start_signals = start - timedelta(days=30)  # >30 candles
+    df = df[start_signals <= df["date"]]
+    df = signals.find_signals(df)
+
+    return df
 
 
 def write_candle_page(metadata: dict, df: DataFrame):
@@ -104,10 +107,10 @@ def write_timestamp_page(symbols: list[str], start: datetime, end: datetime):
         if os.path.isdir(folder):
             metadata = fileio.dict_read(f"{folder}/metadata.json")
 
-            if "L" in metadata["signal_long"]:
+            if metadata["advice"] == "buy":
                 symbols_signal.append(symbol)
                 symbols_long.append(symbol)
-            if "S" in metadata["signal_short"]:
+            elif metadata["advice"] == "sell":
                 symbols_signal.append(symbol)
                 symbols_short.append(symbol)
 
