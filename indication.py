@@ -6,11 +6,16 @@ def analyze(df: DataFrame) -> DataFrame:
     df['ema5'] = ema(df['close'], 5)
     df['ema20'] = ema(df['close'], 20)
     df['rsi'] = rsi(df['close'])
-    df['rsi_sma'] = df['rsi'].rolling(14).mean()
+    df['rsi_sma'] = sma(df['rsi'], 14)
     df['ema30_high'] = ema(df['high'], 30)
     df['ema30_low'] = ema(df['low'], 30)
     df['hl_band'] = hl_band(df)
+    df['ema_cross'] = ema_cross(df)
     return df
+
+
+def sma(column: Series, n: int) -> Series:
+    return column.rolling(n).mean()
 
 
 def ema(column: Series, n: int) -> Series:
@@ -43,5 +48,15 @@ def hl_band(df: DataFrame) -> Series:
             return 'down'
         else:
             return 'sideways'
+
+    return df.apply(get_trend, axis=1)
+
+
+def ema_cross(df: DataFrame) -> Series:
+    def get_trend(row: Series) -> str:
+        if row['ema5'] > row['ema20']:
+            return 'up'
+        else:
+            return 'down'
 
     return df.apply(get_trend, axis=1)

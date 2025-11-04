@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, time
 
 import pandas as pd
 from pandas import DataFrame
@@ -21,6 +21,10 @@ def df_read(folder: str, symbol: str) -> DataFrame:
 
     df = pd.read_json(f"{prefix}.json")
     df['date'] = pd.to_datetime(df["date"], utc=True).dt.tz_convert("America/New_York")
+
+    # Make sure first candle starts at 09:30
+    while df['date'].iloc[0].time() != time(hour=9, minute=30):
+        df = df.iloc[1:]
 
     df.attrs = dict_read(f"{prefix}_attrs.json")
     return df

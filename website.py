@@ -1,13 +1,13 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from pandas import DataFrame
+import pandas as pd
+from pandas import DataFrame, Series
 
+import analysis
 import fileio
 import htmlgen
-import indication
 import schedule
-import signals
 from log import log
 
 
@@ -22,55 +22,51 @@ def write_candle_pages(symbols: list[str], start: datetime, end: datetime):
     log(f"Writing candle pages for {start.isoformat()}...{end.isoformat()}")
 
     for symbol in symbols:
-        df = fileio.df_read("data", symbol)
-        df = analyze(df, start, end)
+        df_195m = fileio.df_read("data", symbol)
+
+        stock_analysis = analysis.analyze_stock(df_195m, start, end)
+        df_195m = stock_analysis.df_195m
+        df_1d = stock_analysis.df_1d
+        df_1w = stock_analysis.df_1w
 
         # for each symbol+timestamp -> generate chart.html and metadata.json
-        df_focus = df[df["date"] >= start]
-        for candle in df_focus.itertuples():
-            if 'L' in candle.signal_long:
+        df_195m_focus = df_195m[df_195m["date"] >= start]
+        for candle_195m in df_195m_focus.itertuples():
+            if 'L' in candle_195m.signal_long:
                 advice = 'buy'
-            elif 'S' in candle.signal_short:
+            elif 'S' in candle_195m.signal_short:
                 advice = 'sell'
             else:
                 continue
 
-            if candle.Index == df.index[-1]:
+            if candle_195m.Index == df_195m.index[-1]:
                 candle_end = end
             else:
-                candle_end = schedule.get_next_timestamp(candle.date, schedule.CANDLE_END_TIMES)
+                candle_end = schedule.get_next_timestamp(candle_195m.date, schedule.CANDLE_END_TIMES)
 
             if schedule.matches_any_time(candle_end, schedule.CANDLE_END_TIMES):
                 candle_state = "complete"
             else:
                 candle_state = "incomplete"
 
+            def make_monday(ts: Series) -> Series:
+                return ts - pd.Timedelta(days=ts.weekday())
+
+            candle_1d = df_1d[df_1d['date'].dt.date == candle_195m.date.date()].squeeze()
+            candle_1w = df_1w[df_1w['date'].dt.date == make_monday(candle_195m.date).date()].squeeze()
+
             metadata = {
-                "symbol": df.attrs['symbol'],
-                "timestamp_start": candle.date,
+                "symbol": df_195m.attrs['symbol'],
+                "timestamp_start": candle_195m.date,
                 "timestamp_end": candle_end,
                 "state": candle_state,
                 "advice": advice,
+                "trend_1d": candle_1d['hl_band'],
+                "trend_1w": candle_1w['hl_band'],
             }
 
-            candle_df = df[df['date'] <= candle.date].tail(30).reset_index(drop=True)
+            candle_df = df_195m[df_195m['date'] <= candle_195m.date].tail(30).reset_index(drop=True)
             write_candle_page(metadata, candle_df)
-
-
-def analyze(df: DataFrame, start: datetime, end: datetime) -> DataFrame:
-    log(f"Analyzing data for {df.attrs['symbol']}")
-
-    # add indicators
-    start_indication = start - timedelta(days=100 // 5 * 7)
-    df = df[(df["date"] >= start_indication) & (df["date"] <= end)]
-    df = indication.analyze(df)
-
-    # add signals
-    start_signals = start - timedelta(days=30)  # >30 candles
-    df = df[start_signals <= df["date"]]
-    df = signals.find_signals(df)
-
-    return df
 
 
 def write_candle_page(metadata: dict, df: DataFrame):

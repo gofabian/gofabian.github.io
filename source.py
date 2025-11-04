@@ -1,7 +1,8 @@
 import asyncio
-import time
-from datetime import datetime, timedelta
+from datetime import datetime
+from typing import Callable
 
+import pandas as pd
 from ib_async import *
 from pandas import DataFrame
 
@@ -64,31 +65,30 @@ async def _download_symbol_async(ib: IB, symbol: str, end: datetime, duration: s
     log(f"Downloaded {symbol}")
 
     # switch to pandas world
-    df_15 = util.df(bars)
+    df = util.df(bars)
+    df['date'] = df['date'].dt.tz_convert('America/New_York')
+    df.attrs["symbol"] = symbol
+    df.attrs["timestamp_end"] = end
 
-    # convert 15min candles to 195min candles
-    def aggregate_daily(group):
-        n = 13  # 195 min / 15 min = 13 Zeilen
-        grp = group.reset_index().groupby(group.reset_index().index // n)
-        return grp.agg({
-            'date': 'first',
-            'open': 'first',
-            'high': 'max',
-            'low': 'min',
-            'close': 'last',
-            'volume': 'sum'
-        })
+    # todo: erster Zeitstempel des df muss 9:30 sein
 
-    df_15 = df_15.set_index('date')
-    df_195 = df_15.groupby(df_15.index.date, group_keys=False).apply(aggregate_daily)
-    df_195 = df_195.reset_index(drop=True)
+    return aggregate_candles(df, lambda dt: (dt - pd.Timedelta(hours=9, minutes=30)).floor('195m'))
 
-    # Börsenzeitzone
-    df_195['date'] = df_195['date'].dt.tz_convert('America/New_York')
 
-    start_last_candle = df_195['date'].iloc[-1]
-    df_195.attrs["symbol"] = symbol
-    df_195.attrs["timestamp_end"] = end
-    df_195.attrs["last_candle"] = "complete" if start_last_candle + timedelta(minutes=195) == end else "incomplete",
+def aggregate_candles(df: DataFrame, group_func: Callable[[pd.Timestamp], object]):
+    groups = df['date'].map(group_func)
+    group = df.groupby(groups)
 
-    return df_195
+    df_result = group.agg({
+        'date': 'first',
+        'open': 'first',
+        'high': 'max',
+        'low': 'min',
+        'close': 'last',
+        'volume': 'sum'
+    })
+    df_result = df_result.reset_index(drop=True)
+
+    df_result.attrs = df.attrs.copy()
+
+    return df_result
