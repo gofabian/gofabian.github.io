@@ -94,7 +94,10 @@
         <tbody>
             {% for m in metadatas_candle %}
             <tr>
-                <th>
+                {% set buy = m.advice=='buy' and m.trend_1d == 'up' and m.trend_1w == 'up' -%}
+                {% set sell = m.advice=='sell' and m.trend_1d == 'down' and m.trend_1w == 'down' -%}
+                {% set stock_color = 'green' if buy else ('red' if sell else 'none') -%}
+                <th class="bgcolor-{{stock_color}}">
                     <a href="https://de.tradingview.com/chart/?symbol={{ m.symbol }}">{{ m.symbol }}</a>
                 </th>
                 <td class="{{ bgcolorclass(m.advice) }}" style="text-transform: uppercase;">{{ m.advice }}</td>
