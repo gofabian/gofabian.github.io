@@ -8,6 +8,7 @@ import analysis
 import fileio
 import htmlgen
 import schedule
+import sector
 from log import log
 
 
@@ -18,12 +19,17 @@ def update_website(symbols: list[str], start: datetime, end: datetime):
     schedule.write_schedule_timestamp(end)
 
 
-def write_candle_pages(symbols: list[str], start: datetime, end: datetime):
+def write_candle_pages(stock_symbols: list[str], start: datetime, end: datetime):
     log(f"Writing candle pages for {start.isoformat()}...{end.isoformat()}")
 
-    for symbol in symbols:
-        df_195m = fileio.df_read("data", symbol)
+    index_analysis_map = {}
+    for index_symbol in (sector.SECTOR_SYMBOLS + ["SPY"]):
+        df_195m = fileio.df_read("data", index_symbol)
+        index_analysis = analysis.analyze_index(df_195m, start, end)
+        index_analysis_map[index_symbol] = index_analysis
 
+    for stock_symbol in stock_symbols:
+        df_195m = fileio.df_read("data", stock_symbol)
         stock_analysis = analysis.analyze_stock(df_195m, start, end)
         df_195m = stock_analysis.df_195m
         df_1d = stock_analysis.df_1d
@@ -37,6 +43,9 @@ def write_candle_pages(symbols: list[str], start: datetime, end: datetime):
             elif 'S' in candle_195m.signal_short:
                 advice = 'sell'
             else:
+                advice = ''
+
+            if advice == '':
                 continue
 
             if candle_195m.Index == df_195m.index[-1]:
@@ -49,11 +58,13 @@ def write_candle_pages(symbols: list[str], start: datetime, end: datetime):
             else:
                 candle_state = "incomplete"
 
-            def make_monday(ts: Series) -> Series:
-                return ts - pd.Timedelta(days=ts.weekday())
-
-            candle_1d = df_1d[df_1d['date'].dt.date == candle_195m.date.date()].squeeze()
-            candle_1w = df_1w[df_1w['date'].dt.date == make_monday(candle_195m.date).date()].squeeze()
+            candle_1d = _select_candle_1d(df_1d, candle_195m)
+            candle_1w = _select_candle_1w(df_1w, candle_195m)
+            candle_1d_spy = _select_candle_1d(index_analysis_map['SPY'].df_1d, candle_195m)
+            candle_1w_spy = _select_candle_1w(index_analysis_map['SPY'].df_1w, candle_195m)
+            sector_name = sector.STOCK_SECTOR_MAPPING[stock_symbol]
+            candle_1d_sector = _select_candle_1d(index_analysis_map[sector_name].df_1d, candle_195m)
+            candle_1w_sector = _select_candle_1w(index_analysis_map[sector_name].df_1w, candle_195m)
 
             metadata = {
                 "symbol": df_195m.attrs['symbol'],
@@ -63,10 +74,26 @@ def write_candle_pages(symbols: list[str], start: datetime, end: datetime):
                 "advice": advice,
                 "trend_1d": candle_1d['hl_band'],
                 "trend_1w": candle_1w['hl_band'],
+                "spy_trend_1d": candle_1d_spy['ema_cross'],
+                "spy_trend_1w": candle_1w_spy['ema_cross'],
+                "sector": sector_name,
+                "sector_trend_1d": candle_1d_sector['hl_band'],
+                "sector_trend_1w": candle_1w_sector['hl_band'],
             }
 
             candle_df = df_195m[df_195m['date'] <= candle_195m.date].tail(30).reset_index(drop=True)
             write_candle_page(metadata, candle_df)
+
+
+def _select_candle_1d(df_1d, candle_195m):
+    return df_1d[df_1d['date'].dt.date == candle_195m.date.date()].squeeze()
+
+
+def _select_candle_1w(df_1w, candle_195m):
+    def make_monday(ts: Series) -> Series:
+        return ts - pd.Timedelta(days=ts.weekday())
+
+    return df_1w[df_1w['date'].dt.date == make_monday(candle_195m.date).date()].squeeze()
 
 
 def write_candle_page(metadata: dict, df: DataFrame):

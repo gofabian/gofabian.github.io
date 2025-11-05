@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import data
 import schedule
+import sector
 import website
 from log import log
 
@@ -72,7 +73,8 @@ def cicd(symbols: list[str]):
 
 
 def update(symbols: list[str], request_start: datetime, request_end: datetime):
-    data.update_data(symbols, request_end)
+    symbols_update = symbols + sector.SECTOR_SYMBOLS + ["SPY"]
+    data.update_data(symbols_update, request_end)
     website.update_website(symbols, request_start, request_end)
 
 

@@ -70,9 +70,12 @@ async def _download_symbol_async(ib: IB, symbol: str, end: datetime, duration: s
     df.attrs["symbol"] = symbol
     df.attrs["timestamp_end"] = end
 
-    # todo: erster Zeitstempel des df muss 9:30 sein
+    def floor_195min(ts):
+        start_of_day = ts.normalize() + pd.Timedelta(hours=9, minutes=30)
+        delta = ts - start_of_day
+        return start_of_day + delta.floor("195min")
 
-    return aggregate_candles(df, lambda dt: (dt - pd.Timedelta(hours=9, minutes=30)).floor('195m'))
+    return aggregate_candles(df, lambda dt: floor_195min(dt))
 
 
 def aggregate_candles(df: DataFrame, group_func: Callable[[pd.Timestamp], object]):

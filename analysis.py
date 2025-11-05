@@ -7,7 +7,6 @@ from pandas import DataFrame
 import indication
 import pjm
 import source
-from log import log
 
 
 @dataclass
@@ -24,7 +23,6 @@ class StockAnalysis:
 
 
 def analyze_stock(df: DataFrame, start: datetime, end: datetime) -> StockAnalysis:
-    log(f"Analyzing stock {df.attrs['symbol']}")
     start = start.replace(hour=9, minute=30)
 
     def analyze_195m(df_195m: DataFrame) -> DataFrame:
@@ -47,7 +45,6 @@ def analyze_stock(df: DataFrame, start: datetime, end: datetime) -> StockAnalysi
 
 
 def analyze_index(df: DataFrame, start: datetime, end: datetime) -> IndexAnalysis:
-    log(f"Analyzing index {df.attrs['symbol']}")
     start = start.replace(hour=9, minute=30)
 
     def analyze_1d(df_195m: DataFrame) -> DataFrame:
