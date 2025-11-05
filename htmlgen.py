@@ -33,10 +33,11 @@ def write_index_html():
         f.write(html)
 
 
-def write_report_html(metadata: dict, folder: str):
+def write_report_html(metadata: dict, metadatas_candle: list[dict], folder: str):
     metadata = metadata.copy()
-    metadata['title'] = WEEKDAYS[metadata["timestamp_start"].weekday()] + ', ' + metadata["timestamp_start"].strftime(
-        '%d.%m.%Y %H:%M')
+    metadata['title'] = WEEKDAYS[metadata["timestamp_start"].weekday()] + ', ' + metadata[
+        "timestamp_start"].strftime('%d.%m.%Y %H:%M')
+    metadata['metadatas_candle'] = metadatas_candle
 
     with open(f'{folder}/index.html', 'w', encoding="utf-8") as f:
         env = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())

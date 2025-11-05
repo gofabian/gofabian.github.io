@@ -121,28 +121,30 @@ def write_timestamp_pages(symbols: list[str], start: datetime, end: datetime):
 def write_timestamp_page(symbols: list[str], start: datetime, end: datetime):
     log(f"Writing timestamp page start={start.isoformat()} end={end.isoformat()}")
 
-    symbols_signal = []
-    symbols_long = []
-    symbols_short = []
-
+    metadatas_candle = []
     for symbol in symbols:
         folder = get_candle_folder(start, symbol)
         if os.path.isdir(folder):
-            metadata = fileio.dict_read(f"{folder}/metadata.json")
-
-            if metadata["advice"] == "buy":
-                symbols_signal.append(symbol)
-                symbols_long.append(symbol)
-            elif metadata["advice"] == "sell":
-                symbols_signal.append(symbol)
-                symbols_short.append(symbol)
+            metadata_timestamp = fileio.dict_read(f"{folder}/metadata.json")
+            metadatas_candle.append(metadata_timestamp)
 
     if schedule.matches_any_time(end, schedule.CANDLE_END_TIMES):
         state = 'complete'
     else:
         state = 'incomplete'
 
-    metadata = {
+    symbols_signal = [m['symbol'] for m in metadatas_candle]
+    symbols_long = [m['symbol'] for m in metadatas_candle if m['advice'] == 'buy']
+    symbols_short = [m['symbol'] for m in metadatas_candle if m['advice'] == 'sell']
+
+    if len(metadatas_candle) > 0:
+        spy_trend_1d = metadatas_candle[0]['spy_trend_1d']
+        spy_trend_1w = metadatas_candle[0]['spy_trend_1w']
+    else:
+        spy_trend_1d = ''
+        spy_trend_1w = ''
+
+    metadata_timestamp = {
         "timestamp_start": start,
         "timestamp_end": end,
         "state": state,
@@ -150,13 +152,15 @@ def write_timestamp_page(symbols: list[str], start: datetime, end: datetime):
         'symbols_signal': symbols_signal,
         'symbols_long': symbols_long,
         'symbols_short': symbols_short,
+        "spy_trend_1d": spy_trend_1d,
+        "spy_trend_1w": spy_trend_1w,
     }
 
     folder = get_timestamp_folder(start)
     os.makedirs(folder, exist_ok=True)
 
-    htmlgen.write_report_html(metadata, folder)
-    fileio.dict_write(f'{folder}/metadata.json', metadata)
+    htmlgen.write_report_html(metadata_timestamp, metadatas_candle, folder)
+    fileio.dict_write(f'{folder}/metadata.json', metadata_timestamp)
 
 
 def get_candle_folder(timestamp, symbol) -> str:

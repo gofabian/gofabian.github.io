@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
     <style>
+        body {
+            padding-bottom: 100px;
+        }
+
         h1 a {
             text-decoration: none;
         }
@@ -21,49 +25,90 @@
             text-align: left;
         }
 
-        td a:focus {
+        th a:focus {
             color: red;
+        }
+
+        .bgcolor-green {
+            background-color: #C1F5C1;
+        }
+        .bgcolor-red {
+            background-color: #FF8A8A;
         }
     </style>
 </head>
 <body>
 
+{%- set weekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] %}
+
 <div class="w3-container w3-green">
-    <h1><a href="#" onclick="window.location.reload();">{{ title }}</a></h1>
+    <h1>
+        <a href="#" onclick="window.location.reload();">
+            {{ weekdays[timestamp_start.weekday()] }} {{ timestamp_start.strftime("%d.%m.%y %H:%M") }}
+        </a>
+    </h1>
 </div>
 
+{%- macro bgcolorclass(text) -%}
+    {%- set mapping = {
+        'up': 'bgcolor-green', 'down': 'bgcolor-red',
+        'buy': 'bgcolor-green', 'sell': 'bgcolor-red'
+    } -%}
+    {{- mapping.get(text, 'none') -}}
+{%- endmacro -%}
+
+{%- macro arrow(text) -%}
+    {%- set mapping = { 'up': '⇗', 'down': '⇘'} -%}
+    {{- mapping.get(text, '-') -}}
+{%- endmacro %}
+
 <div class="w3-row-padding">
-    <div class="w3-half">
-        <h2>Long-Signale ⇗ {{ symbols_long | length }}</h2>
-        <p>{{ ', '.join(symbols_long) }}</p>
+    <h2>{{ symbols_long | length }}⇗</h2>
+    <p><!--<button>Copy to clipboard</button> -->{{ ', '.join(symbols_long) }}</p>
 
-        <table>
-            {% for symbol in symbols_long %}
-                <tr>
-                    <th>{{ symbol }}</th>
-                    <td><a href="{{ symbol }}/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol={{ symbol }}">TradingView</a></td>
-                </tr>
+    <h2>{{ symbols_short | length }}⇘</h2>
+    <p><!--<button>Copy to clipboard</button> -->{{ ', '.join(symbols_short) }}</p>
+ </div>
+
+<div class="w3-row-padding">
+    <table>
+        <tr>
+            <th><a href="https://de.tradingview.com/chart/?symbol=SPY">SPY</a></th>
+            <td class="{{ bgcolorclass(spy_trend_1d) }}">1D{{- arrow(spy_trend_1d) }}</td>
+            <td class="{{ bgcolorclass(spy_trend_1w) }}">1W{{- arrow(spy_trend_1w) }}</td>
+        </tr>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="border-bottom: 1px solid black;">Stock</th>
+                <th style="border-bottom: 1px solid black;">B/S</th>
+                <th style="border-bottom: 1px solid black;">1D</th>
+                <th style="border-bottom: 1px solid black;">1W</th>
+                <th style="border-bottom: 1px solid black; border-left: 1px solid black;">Sector</th>
+                <th style="border-bottom: 1px solid black;">1D</th>
+                <th style="border-bottom: 1px solid black;">1W</th>
+            </tr>
+        </head>
+        <tbody>
+            {% for m in metadatas_candle %}
+            <tr>
+                <th>
+                    <a href="https://de.tradingview.com/chart/?symbol={{ m.symbol }}">{{ m.symbol }}</a>
+                </th>
+                <td class="{{ bgcolorclass(m.advice) }}" style="text-transform: uppercase;">{{ m.advice }}</td>
+                <td class="{{ bgcolorclass(m.trend_1d) }}">1D{{ arrow(m.trend_1d) }}</td>
+                <td class="{{ bgcolorclass(m.trend_1w) }}">1W{{ arrow(m.trend_1w) }}</td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol={{ m.sector }}">{{ m.sector }}</a>
+                </th>
+                <td class="{{ bgcolorclass(m.sector_trend_1d) }}">1D{{ arrow(m.sector_trend_1d) }}</td>
+                <td class="{{ bgcolorclass(m.sector_trend_1w) }}">1W{{ arrow(m.sector_trend_1w) }}</td>
+            </tr>
             {% endfor %}
-        </table>
-
-    </div>
-
-    <div class="w3-half">
-        <h2>Short-Signale ⇘ {{ symbols_short | length }}</h2>
-        <p>{{ ', '.join(symbols_short) }}</p>
-
-        <table>
-            {% for symbol in symbols_short %}
-                <tr>
-                    <th>{{ symbol }}</th>
-                    <td><a href="{{ symbol }}/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol={{ symbol }}">TradingView</a></td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
-
+        </tbody>
+    </table>
 </div>
 
 </body>
