@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
     <style>
+        body {
+            padding-bottom: 100px;
+        }
+
         h1 a {
             text-decoration: none;
         }
@@ -21,247 +25,840 @@
             text-align: left;
         }
 
-        td a:focus {
+        td:has(a), th:has(a) {
+            padding: 0;
+        }
+
+        td a, th a {
+            padding: 10px;
+            display: block;
+        }
+
+        th a:focus {
             color: red;
+        }
+
+        .bgcolor-green {
+            background-color: #C1F5C1;
+        }
+        .bgcolor-red {
+            background-color: #FF8A8A;
         }
     </style>
 </head>
 <body>
 
 <div class="w3-container w3-green">
-    <h1><a href="#" onclick="window.location.reload();">Montag, 21.04.2025 12:45</a></h1>
+    <h1>
+        <a href="#" onclick="window.location.reload();">
+            Mon 21.04.25 12:45
+        </a>
+    </h1>
 </div>
 
 <div class="w3-row-padding">
-    <div class="w3-half">
-        <h2>Long-Signale ⇗ 0</h2>
-        <p></p>
+    <h2>0⇗</h2>
+    <p><!--<button>Copy to clipboard</button> --></p>
 
-        <table>
-            
-        </table>
+    <h2>35⇘</h2>
+    <p><!--<button>Copy to clipboard</button> -->MA, TMUS, GS, RTX, BKNG, TJX, APH, VRTX, DELL, CTAS, TDG, ADSK, PWR, AFL, AXON, TTWO, XEL, BKR, ETR, PEG, MSCI, VMC, TKO, EQT, VRSK, AEE, BR, EXE, JBL, CMS, TYL, NI, LII, NWS, PAYC</p>
+ </div>
 
-    </div>
+<div class="w3-row-padding">
+    <table>
+        <tr>
+            <th><a href="https://de.tradingview.com/chart/?symbol=SPY">SPY</a></th>
+            <td class="bgcolor-red">1D⇘</td>
+            <td class="bgcolor-red">1W⇘</td>
+        </tr>
+    </table>
 
-    <div class="w3-half">
-        <h2>Short-Signale ⇘ 35</h2>
-        <p>MA, TMUS, GS, RTX, BKNG, TJX, APH, VRTX, DELL, CTAS, TDG, ADSK, PWR, AFL, AXON, TTWO, XEL, BKR, ETR, PEG, MSCI, VMC, TKO, EQT, VRSK, AEE, BR, EXE, JBL, CMS, TYL, NI, LII, NWS, PAYC</p>
-
-        <table>
+    <table>
+        <thead>
+            <tr>
+                <th style="border-bottom: 1px solid black;">Stock</th>
+                <th style="border-bottom: 1px solid black;">B/S</th>
+                <th style="border-bottom: 1px solid black;">1D</th>
+                <th style="border-bottom: 1px solid black;">1W</th>
+                <th style="border-bottom: 1px solid black; border-left: 1px solid black;">Sector</th>
+                <th style="border-bottom: 1px solid black;">1D</th>
+                <th style="border-bottom: 1px solid black;">1W</th>
+            </tr>
+        </head>
+        <tbody>
             
-                <tr>
-                    <th>MA</th>
-                    <td><a href="MA/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=MA">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=MA">MA</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="MA/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="MA/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLF">XLF</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>TMUS</th>
-                    <td><a href="TMUS/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=TMUS">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=TMUS">TMUS</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="TMUS/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="TMUS/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLC">XLC</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>GS</th>
-                    <td><a href="GS/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=GS">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=GS">GS</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="GS/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="GS/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLF">XLF</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>RTX</th>
-                    <td><a href="RTX/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=RTX">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=RTX">RTX</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="RTX/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="RTX/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>BKNG</th>
-                    <td><a href="BKNG/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=BKNG">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=BKNG">BKNG</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="BKNG/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="BKNG/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLY">XLY</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>TJX</th>
-                    <td><a href="TJX/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=TJX">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=TJX">TJX</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="none">
+                    <a href="TJX/metadata.json" style="text-decoration: none;">
+                        1D-
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="TJX/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLY">XLY</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>APH</th>
-                    <td><a href="APH/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=APH">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=APH">APH</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="APH/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="APH/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLK">XLK</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>VRTX</th>
-                    <td><a href="VRTX/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=VRTX">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=VRTX">VRTX</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="VRTX/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="VRTX/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLV">XLV</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>DELL</th>
-                    <td><a href="DELL/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=DELL">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=DELL">DELL</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="DELL/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="DELL/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLK">XLK</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>CTAS</th>
-                    <td><a href="CTAS/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=CTAS">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=CTAS">CTAS</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="none">
+                    <a href="CTAS/metadata.json" style="text-decoration: none;">
+                        1D-
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="CTAS/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>TDG</th>
-                    <td><a href="TDG/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=TDG">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=TDG">TDG</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="TDG/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="TDG/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>ADSK</th>
-                    <td><a href="ADSK/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=ADSK">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=ADSK">ADSK</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="ADSK/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="ADSK/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLK">XLK</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>PWR</th>
-                    <td><a href="PWR/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=PWR">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=PWR">PWR</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="PWR/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="PWR/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>AFL</th>
-                    <td><a href="AFL/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=AFL">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=AFL">AFL</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="AFL/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="AFL/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLF">XLF</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>AXON</th>
-                    <td><a href="AXON/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=AXON">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=AXON">AXON</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="none">
+                    <a href="AXON/metadata.json" style="text-decoration: none;">
+                        1D-
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="AXON/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>TTWO</th>
-                    <td><a href="TTWO/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=TTWO">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=TTWO">TTWO</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="none">
+                    <a href="TTWO/metadata.json" style="text-decoration: none;">
+                        1D-
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="TTWO/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLC">XLC</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>XEL</th>
-                    <td><a href="XEL/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=XEL">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=XEL">XEL</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="none">
+                    <a href="XEL/metadata.json" style="text-decoration: none;">
+                        1D-
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="XEL/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLU">XLU</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>BKR</th>
-                    <td><a href="BKR/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=BKR">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=BKR">BKR</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="BKR/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="BKR/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLE">XLE</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>ETR</th>
-                    <td><a href="ETR/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=ETR">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=ETR">ETR</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="ETR/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="ETR/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLU">XLU</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>PEG</th>
-                    <td><a href="PEG/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=PEG">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=PEG">PEG</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="PEG/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="PEG/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLU">XLU</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>MSCI</th>
-                    <td><a href="MSCI/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=MSCI">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=MSCI">MSCI</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="MSCI/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="MSCI/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLF">XLF</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>VMC</th>
-                    <td><a href="VMC/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=VMC">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=VMC">VMC</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="VMC/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="VMC/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLB">XLB</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>TKO</th>
-                    <td><a href="TKO/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=TKO">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=TKO">TKO</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="TKO/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="TKO/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLC">XLC</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>EQT</th>
-                    <td><a href="EQT/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=EQT">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=EQT">EQT</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="EQT/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="EQT/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLE">XLE</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>VRSK</th>
-                    <td><a href="VRSK/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=VRSK">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=VRSK">VRSK</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="VRSK/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="VRSK/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>AEE</th>
-                    <td><a href="AEE/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=AEE">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=AEE">AEE</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="AEE/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="AEE/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLU">XLU</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>BR</th>
-                    <td><a href="BR/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=BR">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=BR">BR</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="BR/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="BR/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>EXE</th>
-                    <td><a href="EXE/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=EXE">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=EXE">EXE</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="EXE/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="EXE/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLE">XLE</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>JBL</th>
-                    <td><a href="JBL/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=JBL">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=JBL">JBL</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="JBL/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="JBL/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLK">XLK</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>CMS</th>
-                    <td><a href="CMS/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=CMS">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=CMS">CMS</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="none">
+                    <a href="CMS/metadata.json" style="text-decoration: none;">
+                        1D-
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="CMS/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLU">XLU</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>TYL</th>
-                    <td><a href="TYL/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=TYL">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=TYL">TYL</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="TYL/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="TYL/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLK">XLK</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>NI</th>
-                    <td><a href="NI/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=NI">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=NI">NI</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="NI/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="NI/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLU">XLU</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="none">1W-</td>
+            </tr>
             
-                <tr>
-                    <th>LII</th>
-                    <td><a href="LII/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=LII">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-red">
+                    <a href="https://de.tradingview.com/chart/?symbol=LII">LII</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="LII/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-red">
+                    <a href="LII/chart.html" style="text-decoration: none;">
+                        1W⇘
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>NWS</th>
-                    <td><a href="NWS/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=NWS">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=NWS">NWS</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="NWS/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="none">
+                    <a href="NWS/chart.html" style="text-decoration: none;">
+                        1W-
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLC">XLC</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-                <tr>
-                    <th>PAYC</th>
-                    <td><a href="PAYC/chart.html">Chart</a></td>
-                    <td><a href="https://de.tradingview.com/chart/?symbol=PAYC">TradingView</a></td>
-                </tr>
+            <tr>
+                <th class="bgcolor-none">
+                    <a href="https://de.tradingview.com/chart/?symbol=PAYC">PAYC</a>
+                </th>
+                <td class="bgcolor-red" style="text-transform: uppercase;">sell</td>
+                <td class="bgcolor-red">
+                    <a href="PAYC/metadata.json" style="text-decoration: none;">
+                        1D⇘
+                    </a>
+                </td>
+                <td class="bgcolor-green">
+                    <a href="PAYC/chart.html" style="text-decoration: none;">
+                        1W⇗
+                    </a>
+                </td>
+                <th style="border-left: 1px solid black;">
+                    <a href="https://de.tradingview.com/chart/?symbol=XLI">XLI</a>
+                </th>
+                <td class="bgcolor-red">1D⇘</td>
+                <td class="bgcolor-red">1W⇘</td>
+            </tr>
             
-        </table>
-    </div>
-
+        </tbody>
+    </table>
 </div>
 
 </body>

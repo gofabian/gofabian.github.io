@@ -25,6 +25,15 @@
             text-align: left;
         }
 
+        td:has(a), th:has(a) {
+            padding: 0;
+        }
+
+        td a, th a {
+            padding: 10px;
+            display: block;
+        }
+
         th a:focus {
             color: red;
         }
@@ -101,8 +110,16 @@
                     <a href="https://de.tradingview.com/chart/?symbol={{ m.symbol }}">{{ m.symbol }}</a>
                 </th>
                 <td class="{{ bgcolorclass(m.advice) }}" style="text-transform: uppercase;">{{ m.advice }}</td>
-                <td class="{{ bgcolorclass(m.trend_1d) }}">1D{{ arrow(m.trend_1d) }}</td>
-                <td class="{{ bgcolorclass(m.trend_1w) }}">1W{{ arrow(m.trend_1w) }}</td>
+                <td class="{{ bgcolorclass(m.trend_1d) }}">
+                    <a href="{{ m.symbol }}/metadata.json" style="text-decoration: none;">
+                        1D{{ arrow(m.trend_1d) }}
+                    </a>
+                </td>
+                <td class="{{ bgcolorclass(m.trend_1w) }}">
+                    <a href="{{ m.symbol }}/chart.html" style="text-decoration: none;">
+                        1W{{ arrow(m.trend_1w) }}
+                    </a>
+                </td>
                 <th style="border-left: 1px solid black;">
                     <a href="https://de.tradingview.com/chart/?symbol={{ m.sector }}">{{ m.sector }}</a>
                 </th>

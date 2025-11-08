@@ -90,10 +90,12 @@ def _select_candle_1d(df_1d, candle_195m):
 
 
 def _select_candle_1w(df_1w, candle_195m):
-    def make_monday(ts: Series) -> Series:
-        return ts - pd.Timedelta(days=ts.weekday())
+    def make_monday_morning(ts: Series) -> Series:
+        return (ts - pd.Timedelta(days=ts.weekday())).replace(hour=9, minute=30)
 
-    return df_1w[df_1w['date'].dt.date == make_monday(candle_195m.date).date()].squeeze()
+    monday = make_monday_morning(candle_195m.date)
+    df_1w_week = df_1w.loc[(df_1w['date'] >= monday) & (df_1w['date'] < monday + pd.Timedelta(days=7))]
+    return df_1w_week.iloc[0]
 
 
 def write_candle_page(metadata: dict, df: DataFrame):

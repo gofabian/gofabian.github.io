@@ -79,3 +79,11 @@ def update(symbols: list[str], request_start: datetime, request_end: datetime):
 
 
 cicd(SYMBOLS_SP500)
+
+# start = datetime.fromisoformat("2025-01-01T09:30:00-04:00")
+# end = datetime.fromisoformat("2025-11-07T16:00:00-04:00")
+# update(SYMBOLS_SP500, start, end)
+
+# start = datetime.fromisoformat("2025-01-01T09:30:00-04:00")
+# end = datetime.fromisoformat("2025-11-07T16:00:00-04:00")
+# website.write_timestamp_pages(SYMBOLS_SP500, start, end)
