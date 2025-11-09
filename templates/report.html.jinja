@@ -80,22 +80,14 @@
 {%- endmacro %}
 
 <div class="w3-row-padding">
-    <h2>{{ symbols_long | length }}⇗</h2>
-    <p><!--<button>Copy to clipboard</button> -->{{ ', '.join(symbols_long) }}</p>
-
-    <h2>{{ symbols_short | length }}⇘</h2>
-    <p><!--<button>Copy to clipboard</button> -->{{ ', '.join(symbols_short) }}</p>
- </div>
-
-<div class="w3-row-padding">
     <table>
         <tr>
-            <th><a href="https://de.tradingview.com/chart/?symbol=SPY">SPY</a></th>
+            <th><a href="https://de.tradingview.com/chart/?symbol=SPY" target="_blank">SPY</a></th>
             <td class="{{ bgcolorclass(spy_trend_1d) }}">1D{{- arrow(spy_trend_1d) }}</td>
             <td class="{{ bgcolorclass(spy_trend_1w) }}">1W{{- arrow(spy_trend_1w) }}</td>
             <td style="width: 50px"></td>
             <td style="padding: 0px">
-                <button class="w3-button w3-green" onclick="copyToClipboard('input1', this)">
+                <button class="w3-button w3-green" onclick="copyFilteredSymbols(this)">
                     Copy filtered stocks
                 </button>
             </td>
@@ -116,12 +108,12 @@
         </thead>
         <tbody>
             {% for m in metadatas_candle %}
-            <tr>
+            <tr data-symbol="{{ m.symbol }}">
                 {% set buy = m.advice=='buy' and m.trend_1d == 'up' and m.trend_1w == 'up' -%}
                 {% set sell = m.advice=='sell' and m.trend_1d == 'down' and m.trend_1w == 'down' -%}
                 {% set stock_color = 'green' if buy else ('red' if sell else 'none') -%}
                 <th class="bgcolor-{{stock_color}}">
-                    <a href="https://de.tradingview.com/chart/?symbol={{ m.symbol }}">{{ m.symbol }}</a>
+                    <a href="https://de.tradingview.com/chart/?symbol={{ m.symbol }}" target="_blank">{{ m.symbol }}</a>
                 </th>
                 <td class="{{ bgcolorclass(m.advice) }}" style="text-transform: uppercase;">{{ m.advice }}</td>
                 <td class="{{ bgcolorclass(m.trend_1d) }}">
@@ -135,7 +127,7 @@
                     </a>
                 </td>
                 <th style="border-left: 1px solid black;">
-                    <a href="https://de.tradingview.com/chart/?symbol={{ m.sector }}">{{ m.sector }}</a>
+                    <a href="https://de.tradingview.com/chart/?symbol={{ m.sector }}" target="_blank">{{ m.sector }}</a>
                 </th>
                 <td class="{{ bgcolorclass(m.sector_trend_1d) }}">1D{{ arrow(m.sector_trend_1d) }}</td>
                 <td class="{{ bgcolorclass(m.sector_trend_1w) }}">1W{{ arrow(m.sector_trend_1w) }}</td>
@@ -170,8 +162,11 @@
         });
     });
 
+    let stocks = [];
+
     function filterTable() {
         const rows = document.querySelectorAll('#dataTable tbody tr');
+        stocks = [];
 
         rows.forEach(row => {
             let showRow = true;
@@ -184,8 +179,6 @@
                 if (filterState !== 'neutral') {
                     const cell = cells[colIndex];
                     const requiredClass = `bgcolor-${filterState}`;
-                    console.log("required", requiredClass);
-                    console.log("exist", cell.classList);
 
                     // Wenn Zelle nicht die erforderliche Klasse hat, Zeile ausblenden
                     if (!cell.classList.contains(requiredClass)) {
@@ -196,11 +189,20 @@
             }
 
             row.classList.toggle('hidden', !showRow);
+
+            if (showRow) {
+                stocks.push(row.dataset.symbol);
+            }
         });
     }
 </script>
 
 <script>
+    function copyFilteredSymbols(button) {
+        const text = stocks.join(',');
+        copyToClipboard(text, button);
+    }
+
     function copyToClipboard(text, button) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
