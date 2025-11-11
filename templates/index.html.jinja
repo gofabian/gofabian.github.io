@@ -40,13 +40,17 @@
     <h1><a href="#" onclick="window.location.reload();">Stock Screener</a></h1>
 </div>
 
+{%- set weekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] %}
+
 <div class="w3-row-padding">
     <table>
         {% for report in reports -%}
             {% set day = report.timestamp_start.day + reports[0].timestamp_start.day -%}
             <tr class="date-{{ report.timestamp_start.date().isoformat() }}{{ ' bg-gray' if (day % 2) == 0 else '' }}">
                 <td>
-                    <a href="{{ report.folder }}/index.html">{{ report.title }}</a>
+                    <a href="{{ report.folder }}/index.html">
+                        {{ weekdays[report.timestamp_start.weekday()] }} {{ report.timestamp_start.strftime("%d.%m.%y %H:%M") }}
+                    </a>
                     {% if report.state == 'incomplete' %}
                         <br>
                         <span style="color:red">🕑{{ report.timestamp_end.strftime("%H:%M") }}</span>
