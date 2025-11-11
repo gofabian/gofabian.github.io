@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Stock Screener - Dienstag, 07.10.2025 12:45</title>
+    <title>Tue 07.10.25 12:45 | Stock Screener</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -56,7 +56,7 @@
 </head>
 <body>
 
-<div class="w3-container w3-green">
+<div class="w3-container w3-light-gray">
     <h1>
         <a href="#" onclick="window.location.reload();">
             Tue 07.10.25 12:45
@@ -72,7 +72,7 @@
             <td class="bgcolor-green">1W⇗</td>
             <td style="width: 50px"></td>
             <td style="padding: 0px">
-                <button class="w3-button w3-green" onclick="copyFilteredSymbols(this)">
+                <button class="w3-button w3-light-gray" onclick="copyFilteredSymbols(this)">
                     Copy filtered stocks
                 </button>
             </td>
@@ -450,33 +450,56 @@
 </div>
 
 <script>
-    const filterStates = {};
+    let filterStates = {};
+    let stocks = [];
+
+    readStatesFromStorage();
+    filterTable();
+
+    function readStatesFromStorage() {
+        console.log("Read: ", localStorage.getItem("filterStates"));
+        const obj = JSON.parse(localStorage.getItem('filterStates')) || { "version": 0 };
+        if (obj.version == 1) filterStates = obj.filterStates;
+    }
+
+    function writeStatesToStorage() {
+        const obj = { "version": 1, "filterStates": filterStates };
+        console.log("Write: ", JSON.stringify(obj));
+        localStorage.setItem('filterStates', JSON.stringify(obj));
+    }
 
     document.querySelectorAll('#dataTable th[data-col]').forEach(th => {
         const colIndex = parseInt(th.dataset.col);
-        filterStates[colIndex] = 'neutral';
 
         th.addEventListener('click', () => {
-            th.classList.remove('bgcolor-green', 'bgcolor-red');
-
-            if (filterStates[colIndex] === 'neutral') {
-                filterStates[colIndex] = 'green';
-                th.className = 'bgcolor-green';
+            if (filterStates[colIndex] === 'red') {
+                filterStates[colIndex] = 'neutral';
             } else if (filterStates[colIndex] === 'green') {
                 filterStates[colIndex] = 'red';
-                th.className = 'bgcolor-red';
             } else {
-                filterStates[colIndex] = 'neutral';
-                th.className = '';
+                filterStates[colIndex] = 'green';
             }
 
+            writeStatesToStorage();
             filterTable();
         });
     });
 
-    let stocks = [];
-
     function filterTable() {
+        document.querySelectorAll('#dataTable th[data-col]').forEach(th => {
+            const colIndex = parseInt(th.dataset.col);
+
+            th.classList.remove('bgcolor-green', 'bgcolor-red');
+
+            if (filterStates[colIndex] === 'red') {
+                th.className = 'bgcolor-red';
+            } else if (filterStates[colIndex] === 'green') {
+                th.className = 'bgcolor-green';
+            } else {
+                th.className = '';
+            }
+        });
+
         const rows = document.querySelectorAll('#dataTable tbody tr');
         stocks = [];
 
@@ -548,14 +571,14 @@
 
     function showSuccess(button) {
         const originalText = button.innerText;
-        button.innerText = '✓ Kopiert!';
-        button.classList.remove('w3-green');
-        button.classList.add('w3-blue');
+        button.innerText = '✓ Copied!';
+        button.classList.remove('w3-light-gray');
+        button.classList.add('w3-gray');
 
         setTimeout(() => {
             button.innerText = originalText;
-            button.classList.remove('w3-blue');
-            button.classList.add('w3-green');
+            button.classList.remove('w3-gray');
+            button.classList.add('w3-light-gray');
         }, 2000);
     }
 </script>
