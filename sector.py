@@ -64,7 +64,7 @@ STOCK_SECTOR_MAPPING = {
     'ENPH': 'XLK', 'ETR': 'XLU', 'EOG': 'XLE', 'EPAM': 'XLK', 'EQT': 'XLE', 'EFX': 'XLI', 'EQIX': 'XLRE', 'EQR': 'XLRE',
     'ERIE': 'XLF', 'ESS': 'XLRE', 'EL': 'XLP', 'EG': 'XLF', 'EVRG': 'XLU', 'ES': 'XLU', 'EXC': 'XLU', 'EXE': 'XLE',
     'EXPE': 'XLY', 'EXPD': 'XLI', 'EXR': 'XLRE', 'XOM': 'XLE', 'FFIV': 'XLK', 'FDS': 'XLF', 'FICO': 'XLK',
-    'FAST': 'XLI', 'FRT': 'XLRE', 'FDX': 'XLI', 'FIS': 'XLF', 'FITB': 'XLF', 'FSLR': 'XLK', 'FE': 'XLU', 'FI': 'XLF',
+    'FAST': 'XLI', 'FRT': 'XLRE', 'FDX': 'XLI', 'FIS': 'XLF', 'FITB': 'XLF', 'FSLR': 'XLK', 'FE': 'XLU', 'FISV': 'XLF',
     'F': 'XLY', 'FTNT': 'XLK', 'FTV': 'XLI', 'FOXA': 'XLC', 'FOX': 'XLC', 'BEN': 'XLF', 'FCX': 'XLB', 'GRMN': 'XLY',
     'IT': 'XLK', 'GE': 'XLI', 'GEHC': 'XLV', 'GEV': 'XLI', 'GEN': 'XLK', 'GNRC': 'XLI', 'GD': 'XLI', 'GIS': 'XLP',
     'GM': 'XLY', 'GPC': 'XLY', 'GILD': 'XLV', 'GPN': 'XLF', 'GL': 'XLF', 'GDDY': 'XLK', 'GS': 'XLF', 'HAL': 'XLE',

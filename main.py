@@ -17,7 +17,7 @@ SYMBOLS_SP500 = [
     "HOOD", "ADP", "DASH", "MO", "CMCSA", "COP", "SO", "CB", "VRTX", "KKR", "CVS", "DELL", "DUK", "HCA", "NEM", "NKE",
     "MCK", "SBUX", "CME", "MMC", "PH", "TT", "GD", "CDNS", "BMY", "ICE", "WM", "COIN", "ORLY", "NOC", "MCO", "SNPS",
     "SHW", "RCL", "MMM", "MDLZ", "CI", "ELV", "ECL", "ABNB", "HWM", "WMB", "CTAS", "BK", "AON", "MSI", "UPS", "EMR",
-    "ITW", "GLW", "AJG", "TDG", "JCI", "USB", "NSC", "MAR", "PNC", "APO", "RSG", "MNST", "VST", "CSX", "AZO", "FI",
+    "ITW", "GLW", "AJG", "TDG", "JCI", "USB", "NSC", "MAR", "PNC", "APO", "RSG", "MNST", "VST", "CSX", "AZO", "FISV",
     "TEL", "ADSK", "PYPL", "CL", "FTNT", "PWR", "ZTS", "URI", "COR", "AEP", "WDAY", "REGN", "HLT", "KMI", "SRE", "FCX",
     "TRV", "EOG", "AFL", "CMI", "APD", "CMG", "FDX", "MPC", "GM", "TFC", "ROP", "BDX", "NXPI", "DDOG", "LHX", "AXON",
     "PSX", "MET", "D", "ALL", "ROST", "IDXX", "NDAQ", "EA", "PCAR", "VLO", "FAST", "SLB", "EXC", "TTWO", "MPWR", "STX",
