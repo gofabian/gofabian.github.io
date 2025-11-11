@@ -58,7 +58,7 @@
 </head>
 <body>
 
-<div class="w3-container w3-green">
+<div class="w3-container w3-black">
     <h1>
         <a href="#" onclick="window.location.reload();">
             {{ weekdays[timestamp_start.weekday()] }} {{ timestamp_start.strftime("%d.%m.%y %H:%M") }}
@@ -87,7 +87,7 @@
             <td class="{{ bgcolorclass(spy_trend_1w) }}">1W{{- arrow(spy_trend_1w) }}</td>
             <td style="width: 50px"></td>
             <td style="padding: 0px">
-                <button class="w3-button w3-green" onclick="copyFilteredSymbols(this)">
+                <button class="w3-button w3-black" onclick="copyFilteredSymbols(this)">
                     Copy filtered stocks
                 </button>
             </td>
@@ -236,7 +236,7 @@
 
     function showSuccess(button) {
         const originalText = button.innerText;
-        button.innerText = '✓ Kopiert!';
+        button.innerText = '✓ Copied!';
         button.classList.remove('w3-green');
         button.classList.add('w3-blue');
 
