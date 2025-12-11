@@ -26,7 +26,7 @@ SYMBOLS_SP500 = [
     "VMC", "DAL", "FICO", "CHTR", "SYY", "KDP", "HSY", "MLM", "WEC", "TKO", "CAH", "CCL", "ED", "EL", "PCG", "LYV",
     "OTIS", "XYL", "PRU", "MCHP", "HIG", "FIS", "IQV", "GEHC", "EQT", "LVS", "DD", "WAB", "HUM", "NRG", "VRSK", "ACGL",
     "CTSH", "WTW", "RJF", "UAL", "TRGP", "LEN", "STT", "CSGP", "SMCI", "EME", "IR", "ADM", "HPE", "NUE", "KHC", "IBKR",
-    "DTE", "KVUE", "TSCO", "AWK", "ODFL", "BRO", "K", "AEE", "ATO", "MTB", "EFX", "WRB", "KEYS", "MTD", "PPL", "FE",
+    "DTE", "KVUE", "TSCO", "AWK", "ODFL", "BRO", "AEE", "ATO", "MTB", "EFX", "WRB", "KEYS", "MTD", "PPL", "FE",
     "FITB", "ROL", "ES", "BR", "SYF", "EXPE", "TDY", "DXCM", "CNP", "GIS", "HPQ", "VLTO", "CBOE", "FSLR", "VRSN", "IP",
     "STZ", "PHM", "FOX", "FOXA", "TTD", "TPR", "PTC", "EXE", "CINF", "ULTA", "NTRS", "NTAP", "LH", "LDOS", "STE", "DG",
     "PPG", "DOV", "TROW", "HBAN", "HUBB", "WSM", "JBL", "PODD", "CMS", "TER", "NVR", "DRI", "TYL", "EIX", "TPL", "CHD",
@@ -88,3 +88,4 @@ cicd(SYMBOLS_SP500)
 # end = datetime.fromisoformat("2025-11-07T16:00:00-04:00")
 
 # website.write_timestamp_pages(SYMBOLS_SP500, start, end)
+
