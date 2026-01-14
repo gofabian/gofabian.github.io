@@ -77,7 +77,7 @@ STOCK_SECTOR_MAPPING = {
     'KEY': 'XLF', 'KEYS': 'XLK', 'KMB': 'XLP', 'KIM': 'XLRE', 'KMI': 'XLE', 'KKR': 'XLF', 'KLAC': 'XLK', 'KHC': 'XLP',
     'KR': 'XLP', 'LHX': 'XLI', 'LH': 'XLV', 'LRCX': 'XLK', 'LW': 'XLP', 'LVS': 'XLY', 'LDOS': 'XLI', 'LEN': 'XLY',
     'LII': 'XLI', 'LLY': 'XLV', 'LIN': 'XLB', 'LYV': 'XLC', 'LKQ': 'XLY', 'LMT': 'XLI', 'L': 'XLF', 'LOW': 'XLY',
-    'LULU': 'XLY', 'LYB': 'XLB', 'MTB': 'XLF', 'MPC': 'XLE', 'MKTX': 'XLF', 'MAR': 'XLY', 'MMC': 'XLF', 'MLM': 'XLB',
+    'LULU': 'XLY', 'LYB': 'XLB', 'MTB': 'XLF', 'MPC': 'XLE', 'MKTX': 'XLF', 'MAR': 'XLY', 'MRSH': 'XLF', 'MLM': 'XLB',
     'MAS': 'XLI', 'MA': 'XLF', 'MTCH': 'XLC', 'MKC': 'XLP', 'MCD': 'XLY', 'MCK': 'XLV', 'MDT': 'XLV', 'MRK': 'XLV',
     'META': 'XLC', 'MET': 'XLF', 'MTD': 'XLV', 'MGM': 'XLY', 'MCHP': 'XLK', 'MU': 'XLK', 'MSFT': 'XLK', 'MAA': 'XLRE',
     'MRNA': 'XLV', 'MHK': 'XLY', 'MOH': 'XLV', 'TAP': 'XLP', 'MDLZ': 'XLP', 'MPWR': 'XLK', 'MNST': 'XLP', 'MCO': 'XLF',
@@ -105,3 +105,4 @@ STOCK_SECTOR_MAPPING = {
     'WTW': 'XLF', 'WDAY': 'XLK', 'WYNN': 'XLY', 'XEL': 'XLU', 'XYL': 'XLI', 'YUM': 'XLY', 'ZBRA': 'XLK', 'ZBH': 'XLV',
     'ZTS': 'XLV', 'APP': 'XLK', 'HOOD': 'XLF', 'EME': 'XLI', 'IBKR': 'XLF'
 }
+
