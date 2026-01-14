@@ -15,7 +15,7 @@ SYMBOLS_SP500 = [
     "SCHW", "BKNG", "GEV", "BA", "AMGN", "TXN", "TJX", "ISRG", "APH", "GILD", "DHR", "ACN", "BSX", "KLAC", "ETN",
     "SPGI", "SYK", "PANW", "ADBE", "PFE", "LOW", "COF", "UNP", "PGR", "HON", "DE", "MDT", "CRWD", "CEG", "ADI", "LMT",
     "HOOD", "ADP", "DASH", "MO", "CMCSA", "COP", "SO", "CB", "VRTX", "KKR", "CVS", "DELL", "DUK", "HCA", "NEM", "NKE",
-    "MCK", "SBUX", "CME", "MMC", "PH", "TT", "GD", "CDNS", "BMY", "ICE", "WM", "COIN", "ORLY", "NOC", "MCO", "SNPS",
+    "MCK", "SBUX", "CME", "MRSH", "PH", "TT", "GD", "CDNS", "BMY", "ICE", "WM", "COIN", "ORLY", "NOC", "MCO", "SNPS",
     "SHW", "RCL", "MMM", "MDLZ", "CI", "ELV", "ECL", "ABNB", "HWM", "WMB", "CTAS", "BK", "AON", "MSI", "UPS", "EMR",
     "ITW", "GLW", "AJG", "TDG", "JCI", "USB", "NSC", "MAR", "PNC", "APO", "RSG", "MNST", "VST", "CSX", "AZO", "FISV",
     "TEL", "ADSK", "PYPL", "CL", "FTNT", "PWR", "ZTS", "URI", "COR", "AEP", "WDAY", "REGN", "HLT", "KMI", "SRE", "FCX",
@@ -88,4 +88,5 @@ cicd(SYMBOLS_SP500)
 # end = datetime.fromisoformat("2025-11-07T16:00:00-04:00")
 
 # website.write_timestamp_pages(SYMBOLS_SP500, start, end)
+
 
