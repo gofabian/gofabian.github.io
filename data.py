@@ -18,8 +18,8 @@ def update_data(symbols: list[str], end: datetime):
 
     # update data for existing symbols
     symbols_old = [symbol for symbol in symbols if fileio.df_exists(FOLDER, symbol)]
-    log(f"Update data for symbols={len(symbols_old)} duration=3 D")
-    dfs_plus = source.download_symbols_in_parallel(symbols_old, end, '3 D')
+    log(f"Update data for symbols={len(symbols_old)} duration=10 D")
+    dfs_plus = source.download_symbols_in_parallel(symbols_old, end, '10 D')
     for df_plus in dfs_plus:
         symbol = df_plus.attrs['symbol']
         df_base = fileio.df_read(FOLDER, symbol)
@@ -61,3 +61,4 @@ def _concat_dfs(df_base: DataFrame, df_plus: DataFrame) -> DataFrame:
     attrs.update(df_plus.attrs)
     df.attrs = attrs
     return df
+
