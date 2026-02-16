@@ -35,7 +35,7 @@ SYMBOLS_SP500 = [
     "IT", "PNR", "GDDY", "SNA", "LUV", "PFG", "LNT", "CTRA", "CNC", "FFIV", "INCY", "BBY", "FTV", "IFF", "GEN", "EXPD",
     "JBHT", "HOLX", "DOW", "NWS", "NWSA", "ALLE", "CHRW", "OMC", "ZBRA", "LYB", "DECK", "ERIE", "EG", "CLX", "TXT",
     "COO", "MAS", "DPZ", "BLDR", "BF B", "CF", "HRL", "BALL", "NDSN", "UHS", "IEX", "SOLV", "AVY", "WYNN", "BAX",
-    "VTRS", "PAYC", "BEN", "SJM", "SWKS", "GNRC", "PNW", "JKHY", "HII", "GL", "ALB", "RVTY", "FDS", "POOL", "DAY",
+    "VTRS", "PAYC", "BEN", "SJM", "SWKS", "GNRC", "PNW", "JKHY", "HII", "GL", "ALB", "RVTY", "FDS", "POOL",
     "AIZ", "SWK", "HAS", "AKAM", "MOH", "AES", "NCLH", "IVZ", "MRNA", "AOS", "TECH", "ALGN", "TAP", "MOS", "CPB",
     "LW", "DVA", "CAG", "CRL", "MGM", "APA", "EPAM", "MHK", "MTCH", "LKQ", "HSIC", "EMN", "KMX"
 ]
@@ -88,5 +88,6 @@ cicd(SYMBOLS_SP500)
 # end = datetime.fromisoformat("2025-11-07T16:00:00-04:00")
 
 # website.write_timestamp_pages(SYMBOLS_SP500, start, end)
+
 
 
