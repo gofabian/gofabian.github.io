@@ -33,7 +33,7 @@ SYMBOLS_SP500 = [
     "SW", "ON", "CFG", "DGX", "RF", "STLD", "BIIB", "GPN", "LULU", "L", "NI", "ZBH", "CPAY", "DVN", "CDW", "WAT", "RL",
     "DLTR", "BG", "WST", "HAL", "AMCR", "KEY", "J", "GPC", "TRMB", "LII", "TSN", "PKG", "MKC", "APTV", "EVRG", "PSKY",
     "IT", "PNR", "GDDY", "SNA", "LUV", "PFG", "LNT", "CTRA", "CNC", "FFIV", "INCY", "BBY", "FTV", "IFF", "GEN", "EXPD",
-    "JBHT", "HOLX", "DOW", "NWS", "NWSA", "ALLE", "CHRW", "OMC", "ZBRA", "LYB", "DECK", "ERIE", "EG", "CLX", "TXT",
+    "JBHT", "DOW", "NWS", "NWSA", "ALLE", "CHRW", "OMC", "ZBRA", "LYB", "DECK", "ERIE", "EG", "CLX", "TXT",
     "COO", "MAS", "DPZ", "BLDR", "BF B", "CF", "HRL", "BALL", "NDSN", "UHS", "IEX", "SOLV", "AVY", "WYNN", "BAX",
     "VTRS", "PAYC", "BEN", "SJM", "SWKS", "GNRC", "PNW", "JKHY", "HII", "GL", "ALB", "RVTY", "FDS", "POOL",
     "AIZ", "SWK", "HAS", "AKAM", "MOH", "AES", "NCLH", "IVZ", "MRNA", "AOS", "TECH", "ALGN", "TAP", "MOS", "CPB",
