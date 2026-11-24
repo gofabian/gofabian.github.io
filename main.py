@@ -7,37 +7,18 @@ import sector
 import website
 from log import log
 
-SYMBOLS_SP500 = [
-    "NVDA", "MSFT", "AAPL", "GOOGL", "GOOG", "AMZN", "META", "AVGO", "TSLA", "BRK B", "WMT", "ORCL", "JPM", "LLY", "V",
-    "NFLX", "MA", "XOM", "JNJ", "PLTR", "COST", "ABBV", "HD", "BAC", "AMD", "PG", "UNH", "GE", "CVX", "KO", "CSCO",
-    "WFC", "IBM", "TMUS", "MS", "CAT", "PM", "AXP", "CRM", "GS", "MU", "ABT", "MCD", "MRK", "LIN", "RTX", "PEP", "TMO",
-    "APP", "DIS", "UBER", "BX", "BLK", "T", "NOW", "INTU", "ANET", "AMAT", "C", "LRCX", "QCOM", "NEE", "INTC", "VZ",
-    "SCHW", "BKNG", "GEV", "BA", "AMGN", "TXN", "TJX", "ISRG", "APH", "GILD", "DHR", "ACN", "BSX", "KLAC", "ETN",
-    "SPGI", "SYK", "PANW", "ADBE", "PFE", "LOW", "COF", "UNP", "PGR", "HON", "DE", "MDT", "CRWD", "CEG", "ADI", "LMT",
-    "HOOD", "ADP", "DASH", "MO", "CMCSA", "COP", "SO", "CB", "VRTX", "KKR", "CVS", "DELL", "DUK", "HCA", "NEM", "NKE",
-    "MCK", "SBUX", "CME", "MRSH", "PH", "TT", "GD", "CDNS", "BMY", "ICE", "WM", "COIN", "ORLY", "NOC", "MCO", "SNPS",
-    "SHW", "RCL", "MMM", "MDLZ", "CI", "ELV", "ECL", "ABNB", "HWM", "WMB", "CTAS", "BK", "AON", "MSI", "UPS", "EMR",
-    "ITW", "GLW", "AJG", "TDG", "JCI", "USB", "NSC", "MAR", "PNC", "APO", "RSG", "MNST", "VST", "CSX", "AZO", "FISV",
-    "TEL", "ADSK", "PYPL", "CL", "FTNT", "PWR", "ZTS", "URI", "COR", "AEP", "WDAY", "REGN", "HLT", "KMI", "SRE", "FCX",
-    "TRV", "EOG", "AFL", "CMI", "APD", "CMG", "FDX", "MPC", "GM", "TFC", "ROP", "BDX", "NXPI", "DDOG", "LHX", "AXON",
-    "PSX", "MET", "D", "ALL", "ROST", "IDXX", "NDAQ", "EA", "PCAR", "VLO", "FAST", "SLB", "EXC", "TTWO", "MPWR", "STX",
-    "XEL", "GRMN", "CARR", "F", "CBRE", "XYZ", "DHI", "KR", "GWW", "PAYX", "WBD", "BKR", "AMP", "EW", "WDC", "CPRT",
-    "OKE", "AIG", "AME", "ETR", "PEG", "EBAY", "CTVA", "MSCI", "TGT", "YUM", "KMB", "FANG", "OXY", "A", "RMD", "ROK",
-    "VMC", "DAL", "FICO", "CHTR", "SYY", "KDP", "HSY", "MLM", "WEC", "TKO", "CAH", "CCL", "ED", "EL", "PCG", "LYV",
-    "OTIS", "XYL", "PRU", "MCHP", "HIG", "FIS", "IQV", "GEHC", "EQT", "LVS", "DD", "WAB", "HUM", "NRG", "VRSK", "ACGL",
-    "CTSH", "WTW", "RJF", "UAL", "TRGP", "LEN", "STT", "CSGP", "SMCI", "EME", "IR", "ADM", "HPE", "NUE", "KHC", "IBKR",
-    "DTE", "KVUE", "TSCO", "AWK", "ODFL", "BRO", "AEE", "ATO", "MTB", "EFX", "WRB", "KEYS", "MTD", "PPL", "FE",
-    "FITB", "ROL", "ES", "BR", "SYF", "EXPE", "TDY", "DXCM", "CNP", "GIS", "HPQ", "VLTO", "CBOE", "FSLR", "VRSN", "IP",
-    "STZ", "PHM", "FOX", "FOXA", "TTD", "TPR", "PTC", "EXE", "CINF", "ULTA", "NTRS", "NTAP", "LH", "LDOS", "STE", "DG",
-    "PPG", "DOV", "TROW", "HBAN", "HUBB", "WSM", "JBL", "PODD", "CMS", "TER", "NVR", "DRI", "TYL", "EIX", "TPL", "CHD",
-    "SW", "ON", "CFG", "DGX", "RF", "STLD", "BIIB", "GPN", "LULU", "L", "NI", "ZBH", "CPAY", "DVN", "CDW", "WAT", "RL",
-    "DLTR", "BG", "WST", "HAL", "AMCR", "KEY", "J", "GPC", "TRMB", "LII", "TSN", "PKG", "MKC", "APTV", "EVRG", "PSKY",
-    "IT", "PNR", "GDDY", "SNA", "LUV", "PFG", "LNT", "CTRA", "CNC", "FFIV", "INCY", "BBY", "FTV", "IFF", "GEN", "EXPD",
-    "JBHT", "DOW", "NWS", "NWSA", "ALLE", "CHRW", "OMC", "ZBRA", "LYB", "DECK", "ERIE", "EG", "CLX", "TXT",
-    "COO", "MAS", "DPZ", "BLDR", "BF B", "CF", "HRL", "BALL", "NDSN", "UHS", "IEX", "SOLV", "AVY", "WYNN", "BAX",
-    "VTRS", "PAYC", "BEN", "SJM", "SWKS", "GNRC", "PNW", "JKHY", "HII", "GL", "ALB", "RVTY", "FDS", "POOL",
-    "AIZ", "SWK", "HAS", "AKAM", "MOH", "AES", "NCLH", "IVZ", "MRNA", "AOS", "TECH", "ALGN", "TAP", "MOS", "CPB",
-    "LW", "DVA", "CAG", "CRL", "MGM", "APA", "EPAM", "MHK", "MTCH", "LKQ", "HSIC", "EMN", "KMX"
+# S&P500
+# nur Stammaktien
+# Marktkapitalisierung > 70B
+# Volumen 60D > 4M
+SYMBOLS = [
+    "AAPL", "NVDA", "MSFT", "GOOG", "GOOGL", "AMZN", "META", "TSLA", "AVGO", "BRK B", "WMT", "JPM", "V", "MU", "AMD",
+    "JNJ", "XOM", "ABBV", "KO", "CVX", "PG", "PLTR", "CSCO", "HD", "MRK", "BAC", "ORCL", "GE", "UNH", "INTC", "PM",
+    "PANW", "RTX", "MS", "AMAT", "LRCX", "WFC", "NFLX", "TXN", "GILD", "IBM", "CRWD", "ANET", "DIS", "MCD", "VZ", "PEP",
+    "C", "DELL", "ABT", "APH", "TMUS", "NEE", "QCOM", "KLAC", "PFE", "SCHW", "DHR", "COP", "TJX", "CRM", "T", "ADI",
+    "BX", "ACN", "UBER", "BA", "IBKR", "APP", "BMY", "MO", "MDT", "SBUX", "MRVL", "STX", "SO", "COF", "BKNG", "CVS",
+    "NEM", "ABNB", "WDC", "DUK", "FTNT", "NOW", "UPS", "CSX", "MRNA", "CMCSA", "ADBE", "USB", "SNDK", "GLW", "MDLZ",
+    "KKR", "MNST", "WMB", "JCI", "CL", "ORLY", "CVNA"
 ]
 
 
@@ -78,16 +59,13 @@ def update(symbols: list[str], request_start: datetime, request_end: datetime):
     website.update_website(symbols, request_start, request_end)
 
 
-cicd(SYMBOLS_SP500)
+cicd(SYMBOLS)
 
-# start = datetime.fromisoformat("2025-01-01T09:30:00-04:00")
-# end = datetime.fromisoformat("2025-11-07T16:00:00-04:00")
-# update(SYMBOLS_SP500, start, end)
+#start = datetime.fromisoformat("2025-01-01T09:30:00-04:00")
+#end = schedule.get_end_timestamp() #datetime.fromisoformat("2026-11-247T16:00:00-04:00")
+#update(SYMBOLS, start, end)
 
 # start = datetime.fromisoformat("2025-01-01T09:30:00-04:00")
 # end = datetime.fromisoformat("2025-11-07T16:00:00-04:00")
 
 # website.write_timestamp_pages(SYMBOLS_SP500, start, end)
-
-
-

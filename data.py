@@ -26,9 +26,17 @@ def update_data(symbols: list[str], end: datetime):
         df = _concat_dfs(df_base, df_plus)
         fileio.df_write(FOLDER, df)
 
+    # update data for existing symbols
+    #for symbol in symbols_old:
+    #    log(f"Update data for symbols={len(symbols_old)} duration=1 Y")
+    #    df_plus = source.download_symbol(symbol, end, '1 Y')
+    #    df_base = fileio.df_read(FOLDER, symbol)
+    #    df = _concat_dfs(df_base, df_plus)
+    #    fileio.df_write(FOLDER, df)
+
     # add data for new symbols
     symbols_new = [symbol for symbol in symbols if symbol not in symbols_old]
-    log(f"Create data for symbols={len(symbols_new)} duration=100 D")
+    log(f"Create data for symbols={len(symbols_new)} duration=1 Y")
     for symbol in symbols_new:
         df = source.download_symbol(symbol, end, '1 Y')
         fileio.df_write(FOLDER, df)
