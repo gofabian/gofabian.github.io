@@ -22,6 +22,10 @@ def update_website(symbols: list[str], start: datetime, end: datetime):
 def write_candle_pages(stock_symbols: list[str], start: datetime, end: datetime):
     log(f"Writing candle pages for {start.isoformat()}...{end.isoformat()}")
 
+    symbols_missing = [s for s in stock_symbols if not fileio.df_exists("data", s)]
+    if len(symbols_missing) > 0:
+        raise Exception(f"Data is missing for symbols: {symbols_missing}")
+
     index_analysis_map = {}
     for index_symbol in (sector.SECTOR_SYMBOLS + ["SPY"]):
         df_195m = fileio.df_read("data", index_symbol)

@@ -16,9 +16,10 @@ def update_data(symbols: list[str], end: datetime):
     log(f"Updating data: symbols={len(symbols)} folder='{FOLDER}' end={end}")
     os.makedirs(FOLDER, exist_ok=True)
 
-    # update data for existing symbols
     symbols_old = [symbol for symbol in symbols if fileio.df_exists(FOLDER, symbol)]
-    log(f"Update data for symbols={len(symbols_old)} duration=10 D")
+    log(f"Update data for symbols={len(symbols_old)}")
+
+    # update data for existing symbols (in parallel)
     dfs_plus = source.download_symbols_in_parallel(symbols_old, end, '10 D')
     for df_plus in dfs_plus:
         symbol = df_plus.attrs['symbol']
@@ -26,9 +27,8 @@ def update_data(symbols: list[str], end: datetime):
         df = _concat_dfs(df_base, df_plus)
         fileio.df_write(FOLDER, df)
 
-    # update data for existing symbols
+    # update data for existing symbols (in sequence)
     #for symbol in symbols_old:
-    #    log(f"Update data for symbols={len(symbols_old)} duration=1 Y")
     #    df_plus = source.download_symbol(symbol, end, '1 Y')
     #    df_base = fileio.df_read(FOLDER, symbol)
     #    df = _concat_dfs(df_base, df_plus)
@@ -36,7 +36,7 @@ def update_data(symbols: list[str], end: datetime):
 
     # add data for new symbols
     symbols_new = [symbol for symbol in symbols if symbol not in symbols_old]
-    log(f"Create data for symbols={len(symbols_new)} duration=1 Y")
+    log(f"Create data for symbols={len(symbols_new)}")
     for symbol in symbols_new:
         df = source.download_symbol(symbol, end, '1 Y')
         fileio.df_write(FOLDER, df)

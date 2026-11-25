@@ -112,8 +112,11 @@
                 {% set buy = m.advice=='buy' and m.trend_1d == 'up' and m.trend_1w == 'up' -%}
                 {% set sell = m.advice=='sell' and m.trend_1d == 'down' and m.trend_1w == 'down' -%}
                 {% set stock_color = 'green' if buy else ('red' if sell else 'none') -%}
+                {% set symbol_order = (symbols.index(m.symbol) + 1) if m.symbol in symbols else "?" -%}
                 <th class="bgcolor-{{stock_color}}">
-                    <a href="https://de.tradingview.com/chart/?symbol={{ m.symbol }}" target="_blank">{{ m.symbol }}</a>
+                    <a href="https://de.tradingview.com/chart/?symbol={{ m.symbol }}" target="_blank">
+                        {{ symbol_order }}<br>{{ m.symbol }}
+                    </a>
                 </th>
                 <td class="{{ bgcolorclass(m.advice) }}" style="text-transform: uppercase;">{{ m.advice }}</td>
                 <td class="{{ bgcolorclass(m.trend_1d) }}">
