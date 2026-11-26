@@ -105,7 +105,7 @@ def update(symbols: list[str], request_start: datetime, request_end: datetime):
     website.update_website(symbols, request_start, request_end)
 
 
-cicd(SYMBOLS)
+cicd(SYMBOLS_SP500)
 
 #start = datetime.fromisoformat("2025-01-01T09:30:00-05:00")
 #end = schedule.get_end_timestamp() #datetime.fromisoformat("2026-10-07T16:00:00-04:00")
